@@ -32,16 +32,16 @@ $('document').ready(function () {
 
             var t0 = performance.now();
             famodulus.modexp(modexps[0][0], modexps[0][1], modexps[0][2], function (result) {
-                console.log("Remote result: " + result);
+                console.log('Remote result: ' + result);
             });
             var t1 = performance.now();
-            console.log("Remote calculation took " + (t1 - t0) + " milliseconds.");
+            console.log('Remote calculation took ' + (t1 - t0) + ' milliseconds.');
 
             var t2 = performance.now();
             var result = BigInt.modexp(modexps[0][0], modexps[0][1], modexps[0][2]);
             var t3 = performance.now();
-            console.log("Local calculation took " + (t3 - t2) + " milliseconds");
-            console.log("Result: " + result);
+            console.log('Local calculation took ' + (t3 - t2) + ' milliseconds');
+            console.log('Result: ' + result);
 
         } else {
             alert('Not implemented yet!');
@@ -84,5 +84,5 @@ $('document').ready(function () {
         $('#input-modulus-default').val(FamodulusDemo.P_3072);
     });
 
-    $('#input-server-1').attr("placeholder", FamodulusDemo.DEFAULT_SERVER);
+    $('#input-server-1').attr('placeholder', FamodulusDemo.DEFAULT_SERVER);
 });

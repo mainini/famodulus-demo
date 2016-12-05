@@ -28,6 +28,8 @@
   "forin": true,
   "smarttabs": true,
   "globals": {
-    "FamodulusDemo": true
+    "Famodulus": false,
+    "FamodulusDemo": true,
+    "BigInt": false
   }
 }

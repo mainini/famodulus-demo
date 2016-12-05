@@ -37,7 +37,7 @@ $('document').ready(function () {
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js';
-        $("body").append(script);
+        $('body').append(script);
         window.BigInt.modexp = window.BigInt.modexpVerificatum;
         alert('Verificatum library injected!');  // @todo errorhandling!
     };
