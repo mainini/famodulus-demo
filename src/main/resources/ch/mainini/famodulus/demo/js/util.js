@@ -29,5 +29,13 @@ $('document').ready(function () {
         }
     };
 
+    FamodulusDemo.injectVerificatum = function () {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js';
+        $("body").append(script);
+        alert('Verificatum library injected!');
+    };
+
     window.FamodulusDemo = FamodulusDemo;
 });

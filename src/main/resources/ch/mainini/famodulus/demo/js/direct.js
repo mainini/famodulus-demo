@@ -11,6 +11,10 @@ $('document').ready(function () {
         $('#form-modexp').trigger('reset');
     });
 
+    $('#btn-verificatum').click(function () {
+        FamodulusDemo.injectVerificatum();
+    });
+
     $('#btn-add-p').click(function () {
         FamodulusDemo.appendTo('#input-bases', FamodulusDemo.randHexString(randLength));
         FamodulusDemo.appendTo('#input-exponents', FamodulusDemo.randHexString(randLength));
