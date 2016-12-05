@@ -21,7 +21,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li id="nav-home"><a href="/index.html">Start</a></li>
-                        <li id="nav-modexp" class="active"><a href="/modexp.html">Basic Modexp</a></li>
+                        <li id="nav-modexp" class="active"><a href="/modexp.html">Direct</a></li>
                         <li id="nav-dec"><a href="/dec.html">DEC</a></li>
                         <li id="nav-doc"><a href="/doc.html">API Doc</a></li>
                     </ul>
@@ -30,11 +30,97 @@
         </nav>
 
         <div class="container" role="main" style="padding-top:25px">
+
             <div class="page-header">
-                <h3 style="margin-bottom:0px">Basic Modexp</h3>
+                <h3 style="margin-bottom:0px">Direct Outsourcing</h3>
             </div>
 
-            <p>Basic Modexp!</p>
+            <p>This page outsources a single or multiple modexps to a single server. Values for base,
+                exponent and modulus are simply transmitted directly and without any blinding.</p>
+
+            <div class="panel panel-default">
+                <div class="panel-body" style="padding-top:5px">
+                    <div>
+                        <form id="form-modexp" class="form-horizontal">
+
+                            <h4>Server</h4>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-server-1">famodulus Server</label>
+                                <div class="col-xs-6">
+                                    <input id="input-server-1" class="form-control" type="url" placeholder="Defaults to http://localhost:8081">
+                                </div>
+                            </div>
+
+                            <h4>Default Parameters</h4>
+                            <p>Optionally, a default base, exponent and/or modulus can be specified, which will override values in the individual modexp(s) given below.</p>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-base-default">Base</label>
+                                <div class="col-xs-6">
+                                    <input id="input-base-default" class="form-control" type="text" placeholder="Default base (hexadecimal)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-exponent-default">Exponent</label>
+                                <div class="col-xs-6">
+                                    <input id="input-exponent-default" class="form-control" type="text" placeholder="Default exponent (hexadecimal)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-modulus-default">Modulus</label>
+                                <div class="col-xs-6">
+                                    <input id="input-modulus-default" class="form-control" type="text" placeholder="Default modulus (hexadecimal)">
+                                </div>
+                            </div>
+
+                            <h4>Modexp(s)</h4>
+                            <p>Specify parameters for the individual modexps. Values must be in hexadecimal and separated with comma. If a default has been specified above, a values can be omitted with two commas.</p>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-bases">Bases</label>
+                                <div class="col-xs-6">
+                                    <textarea id="input-bases" class="form-control"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-exponents">Exponents</label>
+                                <div class="col-xs-6">
+                                    <textarea id="input-exponents" class="form-control"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-moduli">Moduli</label>
+                                <div class="col-xs-6 ">
+                                    <textarea id="input-moduli" class="form-control"></textarea>
+                                </div>
+                            </div>
+
+                            <h4>Options</h4>
+                            <p>Request <i>brief</i> response from server, containing only the results.</p>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-brief">Brief Response</label>
+                                <div class="col-xs-1">
+                                    <input id="input-brief" class="form-control" type="checkbox" checked>
+                                </div>
+                            </div>
+
+                        </form>
+
+                        <form id="form-buttons" class="form-horizontal">
+                            <button id="btn-calculate" type="button" class="btn btn-primary">Calculate&nbsp;<span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+                            <button id="btn-p1" type="button" class="btn btn-default">1x Rand mod P3072&nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                            <button id="btn-r1" type="button" class="btn btn-default">1x Rand mod Rand&nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                            <button id="btn-default" type="button" class="btn btn-default">Default mod P3072&nbsp;<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
         </div>
 
         <footer>
