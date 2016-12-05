@@ -34,7 +34,7 @@ $('document').ready(function () {
         script.type = 'text/javascript';
         script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js';
         $("body").append(script);
-        alert('Verificatum library injected!');
+        alert('Verificatum library injected!');  // @todo errorhandling!
     };
 
     window.FamodulusDemo = FamodulusDemo;
