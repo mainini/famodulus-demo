@@ -1,6 +1,11 @@
 $('document').ready(function () {
     'use strict';
 
+    function reset() {
+        FD.resetResults();
+        $('#form-modexp').trigger('reset');
+    }
+
     $('#btn-calculate').click(function () {
         var defaultBase = $('#input-base-default').val().length > 0 ? $('#input-base-default').val() : undefined;
         var defaultExponent = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
@@ -28,28 +33,55 @@ $('document').ready(function () {
                 return;
             }
 
+            FD.showResults();
             var famodulus = new Famodulus([FD.getServer('#input-server-1')]);
 
-            var t0 = performance.now();
+            var tLocal;
+            var tRemote = performance.now();
             famodulus.modexp(modexps[0][0], modexps[0][1], modexps[0][2], function (result) {
-                console.log('Remote result: ' + result);
+                tRemote = performance.now() - tRemote;
+
+                window.FD.resultRemote = result;
+                if (tLocal === undefined) {
+                    FD.showRemoteTime(tRemote);
+                } else {
+                    if (tRemote < tLocal) {
+                        FD.showRemoteTime(tRemote, true);
+                    } else if (tRemote > tLocal) {
+                        FD.showRemoteTime(tRemote, false);
+                    } else {
+                        FD.showRemoteTime(tRemote);
+                    }
+                }
+                FD.showDifference(Math.abs(tRemote - tLocal));
+                FD.showEqual(window.FD.resultRemote, window.FD.resultLocal);
+                FD.showRemoteResult(result);
             });
-            var t1 = performance.now();
-            console.log('Remote calculation took ' + (t1 - t0) + ' milliseconds.');
 
-            var t2 = performance.now();
-            var result = BigInt.modexp(modexps[0][0], modexps[0][1], modexps[0][2]);
-            var t3 = performance.now();
-            console.log('Local calculation took ' + (t3 - t2) + ' milliseconds');
-            console.log('Result: ' + result);
+            tLocal = performance.now();
+            window.FD.resultLocal = BigInt.modexp(modexps[0][0], modexps[0][1], modexps[0][2]);
+            tLocal = performance.now() - tLocal;
 
+            if (tRemote < tLocal) {
+                FD.showRemoteTime(tRemote, true);
+                FD.showLocalTime(tLocal, false);
+            } else if (tRemote > tLocal) {
+                FD.showRemoteTime(tRemote, false);
+                FD.showLocalTime(tLocal, true);
+            } else {
+                FD.showLocalTime(tLocal);
+            }
+
+            FD.showDifference(Math.abs(tRemote - tLocal));
+            FD.showEqual(window.FD.resultRemote, window.FD.resultLocal);
+            FD.showLocalResult(window.FD.resultLocal);
         } else {
             alert('Not implemented yet!');
         }
     });
 
     $('#btn-reset').click(function () {
-        $('#form-modexp').trigger('reset');
+        reset();
     });
 
     $('#btn-verificatum').click(function () {
@@ -84,5 +116,6 @@ $('document').ready(function () {
         $('#input-modulus-default').val(FD.P_3072);
     });
 
+    reset();
     $('#input-server-1').attr('placeholder', FD.DEFAULT_SERVER);
 });
