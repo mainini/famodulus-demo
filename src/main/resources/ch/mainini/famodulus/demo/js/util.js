@@ -1,15 +1,15 @@
 $('document').ready(function () {
     'use strict';
 
-    var FamodulusDemo = {};
+    var FD = {};
 
-    FamodulusDemo.P_3072 = '8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006119df';
+    FD.P_3072 = '8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006119df';
 
-    FamodulusDemo.DEFAULT_RAND_LENGTH = 768;
-    FamodulusDemo.DEFAULT_SERVER = 'http://localhost:8081/api/modexp/';
+    FD.DEFAULT_RAND_LENGTH = 768;
+    FD.DEFAULT_SERVER = 'http://localhost:8081/api/modexp/';
 
-    FamodulusDemo.randHexString = function (length) {
-        length = length === undefined ? FamodulusDemo.DEFAULT_RAND_LENGTH : length;
+    FD.randHexString = function (length) {
+        length = length === undefined ? FD.DEFAULT_RAND_LENGTH : length;
         var retval = '';
         while (retval.length < length) {
             var value = Math.floor(Math.random() * 256);
@@ -18,7 +18,7 @@ $('document').ready(function () {
         return retval;
     };
 
-    FamodulusDemo.appendTo = function (field, value) {
+    FD.appendTo = function (field, value) {
         var curval = $(field).val().toString();
         if (curval.length === 0) {
             $(field).val(value);
@@ -33,7 +33,7 @@ $('document').ready(function () {
         }
     };
 
-    FamodulusDemo.injectVerificatum = function () {
+    FD.injectVerificatum = function () {
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js';
@@ -42,7 +42,7 @@ $('document').ready(function () {
         alert('Verificatum library injected!');  // @todo errorhandling!
     };
 
-    FamodulusDemo.stringToList = function (val) {
+    FD.stringToList = function (val) {
         if (val.length === 0) {
             return [];
         } else {
@@ -50,9 +50,9 @@ $('document').ready(function () {
         }
     };
 
-    FamodulusDemo.getServer = function (field) {
-        return $(field).val().length > 0 ? $(field).val() : FamodulusDemo.DEFAULT_SERVER;
+    FD.getServer = function (field) {
+        return $(field).val().length > 0 ? $(field).val() : FD.DEFAULT_SERVER;
     };
 
-    window.FamodulusDemo = FamodulusDemo;
+    window.FD = FD;
 });
