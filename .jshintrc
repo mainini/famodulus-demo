@@ -29,7 +29,7 @@
   "smarttabs": true,
   "globals": {
     "Famodulus": false,
-    "FamodulusDemo": true,
+    "FD": true,
     "BigInt": false
   }
 }
