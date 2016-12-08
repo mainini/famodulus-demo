@@ -36,10 +36,9 @@ $('document').ready(function () {
     FD.injectVerificatum = function () {
         var script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js';
+        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
         $('body').append(script);
         window.BigInt.modexp = window.BigInt.modexpVerificatum;
-        alert('Verificatum library injected!');  // @todo errorhandling!
     };
 
     FD.stringToList = function (val) {
@@ -48,6 +47,28 @@ $('document').ready(function () {
         } else {
             return val.replace(/\s+/gm, '').split(',');
         }
+    };
+
+    FD.parseFields = function() {
+        var data = {};
+        data.defaultBase = $('#input-base-default').val().length > 0 ? $('#input-base-default').val() : undefined;
+        data.defaultExponent = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
+        data.defaultModulus = $('#input-modulus-default').val().length > 0 ? $('#input-modulus-default').val() : undefined;
+
+        var bases = FD.stringToList($('#input-bases').val());
+        var exponents = FD.stringToList($('#input-exponents').val());
+        var moduli = FD.stringToList($('#input-moduli').val());
+
+        if (bases.length !== exponents.length || bases.length !== moduli.length) {
+            throw 'Inequal amount of bases, exponents and moduli entered!';
+        }
+
+        data.modexps = [];
+        for (var i = 0; i < bases.length; i++) {
+            data.modexps.push([bases[i], exponents[i], moduli[i]]);
+        }
+
+        return data;
     };
 
     FD.getServer = function (field) {
@@ -91,6 +112,8 @@ $('document').ready(function () {
 
     FD.resetResults = function () {
         $('#form-results').trigger('reset');
+        $('#div-results').hide();
+        $('#div-no-results').show();
 
         $('#div-time-remote').hide();
         $('#p-time-remote').remove();
@@ -147,14 +170,14 @@ $('document').ready(function () {
         $('#div-time-local').show();
     };
 
-    FD.showDifference = function (difference) {
-        $('#p-time-difference').remove();
+    FD.showDifference = function (time1, time2) {
+        var factor = time1 >= time2 ? Math.ceil(time1/time2*100)/100 : Math.ceil(time2/time1*100)/100;
 
+        $('#p-time-difference').remove();
         var p = document.createElement('p');
         p.id = 'p-time-difference';
         p.appendChild(FD.createGlyph('time'));
-        p.appendChild(document.createTextNode('\xa0Difference: ' + difference + ' ms.'));
-
+        p.appendChild(document.createTextNode('\xa0Difference: ' + Math.abs(time1 - time2) + ' ms (' + factor +' times).'));
         $('#div-time-difference').append(p);
         $('#div-time-difference').show();
     };
