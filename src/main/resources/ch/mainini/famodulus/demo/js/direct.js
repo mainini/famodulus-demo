@@ -47,9 +47,9 @@ $('document').ready(function () {
                 } else {
                     FD.showRemoteTime(timeRemote);
                 }
-                FD.showRemoteResult(result);
+                FD.showRemoteResult(result.r);
                 FD.showDifference(timeRemote, timeLocal);
-                FD.showEqual(result, resultLocal);
+                FD.showEqual(result.r, resultLocal);
             });
         } else {
             alert('Not implemented yet!');
@@ -95,4 +95,10 @@ $('document').ready(function () {
 
     reset();
     $('#input-server-1').attr('placeholder', FD.DEFAULT_SERVER);
+
+    if(typeof(verificatum) !== 'undefined') {
+        $('#btn-verificatum').prop('disabled', true);
+    } else {
+        $('#btn-verificatum').prop('disabled', false);
+    }
 });
