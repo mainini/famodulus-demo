@@ -190,7 +190,6 @@ $('document').ready(function () {
         var p = document.createElement('p');
         p.id = 'p-equal';
 
-        // @todo check for leading 0
         if ((result1 === undefined && result2 !== undefined) ||
                 (result2 === undefined && result1 !== undefined) ||
                 result1.toLowerCase() !== result2.toLowerCase())
