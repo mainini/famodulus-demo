@@ -39,6 +39,7 @@ $('document').ready(function () {
         script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
         $('body').append(script);
         window.BigInt.modexp = window.BigInt.modexpVerificatum;
+        $('#btn-verificatum').prop('disabled', true);
     };
 
     FD.stringToList = function (val) {
