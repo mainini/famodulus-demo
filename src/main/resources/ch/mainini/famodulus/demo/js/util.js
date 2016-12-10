@@ -50,7 +50,7 @@ $('document').ready(function () {
         }
     };
 
-    FD.parseFields = function() {
+    FD.parseFields = function () {
         var data = {};
         data.defaultBase = $('#input-base-default').val().length > 0 ? $('#input-base-default').val() : undefined;
         data.defaultExponent = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
@@ -66,9 +66,10 @@ $('document').ready(function () {
 
         data.modexps = [];
         for (var i = 0; i < bases.length; i++) {
-            data.modexps.push([bases[i], exponents[i], moduli[i]]);
+            data.modexps.push([bases[i] === '' ? data.defaultBase : bases[i],
+                exponents[i] === '' ? data.defaultExponent : exponents[i],
+                moduli[i] === '' ? data.defaultModulus : moduli[i]]);
         }
-
         return data;
     };
 
@@ -174,13 +175,13 @@ $('document').ready(function () {
     };
 
     FD.showDifference = function (time1, time2) {
-        var factor = time1 >= time2 ? Math.ceil(time1/time2*100)/100 : Math.ceil(time2/time1*100)/100;
+        var factor = time1 >= time2 ? Math.ceil(time1 / time2 * 100) / 100 : Math.ceil(time2 / time1 * 100) / 100;
 
         $('#p-time-difference').remove();
         var p = document.createElement('p');
         p.id = 'p-time-difference';
         p.appendChild(FD.createGlyph('time'));
-        p.appendChild(document.createTextNode('\xa0Difference: ' + Math.abs(time1 - time2) + ' ms (' + factor +' times).'));
+        p.appendChild(document.createTextNode('\xa0Difference: ' + Math.abs(time1 - time2) + ' ms (' + factor + ' times).'));
         $('#div-time-difference').append(p);
         $('#div-time-difference').show();
     };
