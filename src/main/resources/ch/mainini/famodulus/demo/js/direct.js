@@ -33,7 +33,7 @@ $('document').ready(function () {
             FD.showLocalResult(resultLocal);
 
             // remote performance measurement
-            var famodulus = new Famodulus([FD.getServer('#input-server-1')]);
+            var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
             var timeRemote = performance.now();
             famodulus.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2], function (result) {
                 timeRemote = performance.now() - timeRemote;
