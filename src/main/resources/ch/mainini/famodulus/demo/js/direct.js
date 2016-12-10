@@ -4,6 +4,7 @@ $('document').ready(function () {
     function reset() {
         FD.resetResults();
         $('#form-modexp').trigger('reset');
+        $('#input-server-1').attr('placeholder', FD.DEFAULT_SERVER);
     }
 
     $('#btn-calculate').click(function () {
@@ -28,7 +29,7 @@ $('document').ready(function () {
             // local performance measurement
             var timeLocal = performance.now();
             var resultLocal = BigInt.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2]);
-            resultLocal = resultLocal.startsWith('0') ? resultLocal.substring(1) : resultLocal;
+            resultLocal = resultLocal !== '0' && resultLocal.startsWith('0') ? resultLocal.substring(1) : resultLocal;
             timeLocal = performance.now() - timeLocal;
             FD.showLocalTime(timeLocal);
             FD.showLocalResult(resultLocal, 1);
@@ -65,9 +66,9 @@ $('document').ready(function () {
 
             var resultLocal = '';
             for (var i = 0; i < results.length - 1; i++) {
-                resultLocal += results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
+                resultLocal += results[i] !== '0' && results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
             }
-            resultLocal += results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
+            resultLocal += results[i] !== '0' && results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
             FD.showLocalTime(timeLocal);
             FD.showLocalResult(resultLocal, results.length);
 
@@ -137,7 +138,6 @@ $('document').ready(function () {
     });
 
     reset();
-    $('#input-server-1').attr('placeholder', FD.DEFAULT_SERVER);
 
     if (typeof (verificatum) !== 'undefined') {
         $('#btn-verificatum').prop('disabled', true);
