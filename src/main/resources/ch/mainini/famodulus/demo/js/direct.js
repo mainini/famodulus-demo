@@ -28,6 +28,7 @@ $('document').ready(function () {
             // local performance measurement
             var timeLocal = performance.now();
             var resultLocal = BigInt.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2]);
+            resultLocal = resultLocal.startsWith('0') ? resultLocal.substring(1) : resultLocal;
             timeLocal = performance.now() - timeLocal;
             FD.showLocalTime(timeLocal);
             FD.showLocalResult(resultLocal, 1);
@@ -64,9 +65,9 @@ $('document').ready(function () {
 
             var resultLocal = '';
             for (var i = 0; i < results.length - 1; i++) {
-                resultLocal += results[i] + ',\n';
+                resultLocal += results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
             }
-            resultLocal += results[results.length - 1];
+            resultLocal += results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
             FD.showLocalTime(timeLocal);
             FD.showLocalResult(resultLocal, results.length);
 
