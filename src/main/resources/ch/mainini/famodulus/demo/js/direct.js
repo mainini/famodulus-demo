@@ -23,22 +23,25 @@ $('document').ready(function () {
                 alert('Default values not applicable for single modexp!');
                 return;
             }
-
             FD.showResults();
 
-            // local performance measurement
+            //////////////// START local performance measurement ///////////////
             var timeLocal = performance.now();
             var resultLocal = BigInt.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2]);
-            resultLocal = resultLocal !== '0' && resultLocal.startsWith('0') ? resultLocal.substring(1) : resultLocal;
             timeLocal = performance.now() - timeLocal;
+            //////////////// END local performance measurement  ////////////////
+
+            resultLocal = resultLocal !== '0' && resultLocal.startsWith('0') ? resultLocal.substring(1) : resultLocal;
             FD.showLocalTime(timeLocal);
             FD.showLocalResult(resultLocal, 1);
 
-            // remote performance measurement
             var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
+
+            //////////////// START remote performance measurement //////////////
             var timeRemote = performance.now();
             famodulus.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2], function (result) {
                 timeRemote = performance.now() - timeRemote;
+            //////////////// END remote performance measurement  ///////////////
 
                 if (timeRemote < timeLocal) {
                     FD.showRemoteTime(timeRemote, true);
@@ -56,13 +59,16 @@ $('document').ready(function () {
         } else {
             FD.showResults();
 
-            // local performance measurement
             var results = [];
+            var i = 0;
+
+            //////////////// START local performance measurement ///////////////
             var timeLocal = performance.now();
-            for (var i = 0; i < data.modexps.length; i++) {
+            for (; i < data.modexps.length; i++) {
                 results.push(BigInt.modexp(data.modexps[i][0], data.modexps[i][1], data.modexps[i][2]));
             }
             timeLocal = performance.now() - timeLocal;
+            //////////////// END local performance measurement  ////////////////
 
             var resultLocal = '';
             for (var i = 0; i < results.length - 1; i++) {
@@ -72,11 +78,13 @@ $('document').ready(function () {
             FD.showLocalTime(timeLocal);
             FD.showLocalResult(resultLocal, results.length);
 
-            // remote performance measurement
             var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
+
+            //////////////// START remote performance measurement //////////////
             var timeRemote = performance.now();
             famodulus.modexps(data.modexps, function (results) {
                 timeRemote = performance.now() - timeRemote;
+            //////////////// END remote performance measurement  ///////////////
 
                 if (timeRemote < timeLocal) {
                     FD.showRemoteTime(timeRemote, true);
