@@ -126,8 +126,10 @@ $('document').ready(function () {
         $('#p-equal').remove();
 
         $('#div-results-remote').hide();
+        $('#h-results-remote').remove();
         $('#input-results-remote').val('');
         $('#div-results-local').hide();
+        $('#h-results-local').remove();
         $('#input-results-local').val('');
     };
 
@@ -185,7 +187,6 @@ $('document').ready(function () {
 
     FD.showEqual = function (result1, result2) {
         $('#p-equal').remove();
-
         var p = document.createElement('p');
         p.id = 'p-equal';
 
@@ -207,12 +208,24 @@ $('document').ready(function () {
         $('#div-equal').show();
     };
 
-    FD.showRemoteResult = function (result) {
+    FD.showRemoteResult = function (result, count) {
+        $('#h-results-remote').remove();
+        var h = document.createElement('h4');
+        h.id = 'h-results-remote';
+        h.appendChild(document.createTextNode('Remote Results (' + count + '):'));
+        $('#div-results-remote-title').append(h);
+
         $('#input-results-remote').val(result.toLowerCase());
         $('#div-results-remote').show();
     };
 
-    FD.showLocalResult = function (result) {
+    FD.showLocalResult = function (result, count) {
+        $('#h-results-local').remove();
+        var h = document.createElement('h4');
+        h.id = 'h-results-local';
+        h.appendChild(document.createTextNode('Local Results (' + count + '):'));
+        $('#div-results-local-title').append(h);
+
         $('#input-results-local').val(result.toLowerCase());
         $('#div-results-local').show();
     };
