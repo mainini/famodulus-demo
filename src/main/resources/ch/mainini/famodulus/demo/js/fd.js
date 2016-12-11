@@ -118,6 +118,11 @@ $('document').ready(function () {
     };
 
     FD.resetResults = function () {
+        FD.resultLocal = '';
+        FD.resultRemote = '';
+        FD.timeLocal = '';
+        FD.timeRemote = '';
+
         $('#form-results').trigger('reset');
         $('#div-results').hide();
         $('#div-no-results').show();
