@@ -2,11 +2,25 @@ $('document').ready(function () {
     'use strict';
 
     var FD = {};
+    window.FD = FD;
 
     FD.P_3072 = '8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006119df';
-
     FD.DEFAULT_RAND_LENGTH = 768;
     FD.DEFAULT_SERVER = 'http://localhost:8081/api/modexp/';
+
+    FD.resultLocal = '';
+    FD.resultRemote = '';
+    FD.timeLocal = '';
+    FD.timeRemote = '';
+
+    FD.injectVerificatum = function () {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
+        $('body').append(script);
+        window.BigInt.modexp = window.BigInt.modexpVerificatum;
+        $('#btn-verificatum').prop('disabled', true);
+    };
 
     FD.randHexString = function (length) {
         length = length === undefined ? FD.DEFAULT_RAND_LENGTH : length;
@@ -31,15 +45,6 @@ $('document').ready(function () {
         } else {
             $(field).val(curval + ',\n' + value);
         }
-    };
-
-    FD.injectVerificatum = function () {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
-        $('body').append(script);
-        window.BigInt.modexp = window.BigInt.modexpVerificatum;
-        $('#btn-verificatum').prop('disabled', true);
     };
 
     FD.stringToList = function (val) {
@@ -230,5 +235,64 @@ $('document').ready(function () {
         $('#div-results-local').show();
     };
 
-    window.FD = FD;
+    FD.modexpLocal = function (base, exponent, modulus) {
+        //////////////// START local performance measurement ///////////////
+        FD.timeLocal = performance.now();
+        FD.resultLocal = BigInt.modexp(base, exponent, modulus);
+        FD.timeLocal = performance.now() - FD.timeLocal;
+        //////////////// END local performance measurement  ////////////////
+
+        FD.resultLocal = FD.resultLocal !== '0' && FD.resultLocal.startsWith('0') ? FD.resultLocal.substring(1) : FD.resultLocal;
+        FD.showLocalTime(FD.timeLocal);
+        FD.showLocalResult(FD.resultLocal, 1);
+    };
+
+    FD.modexpsLocal = function (data) {
+        var results = [];
+        var i = 0;
+
+        //////////////// START local performance measurement ///////////////
+        FD.timeLocal = performance.now();
+        for (; i < data.modexps.length; i++) {
+            results.push(BigInt.modexp(data.modexps[i][0], data.modexps[i][1], data.modexps[i][2]));
+        }
+        FD.timeLocal = performance.now() - FD.timeLocal;
+        //////////////// END local performance measurement  ////////////////
+
+        for (i = 0; i < results.length - 1; i++) {
+            FD.resultLocal += results[i] !== '0' && results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
+        }
+        FD.resultLocal += results[i] !== '0' && results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
+        FD.showLocalTime(FD.timeLocal);
+        FD.showLocalResult(FD.resultLocal, results.length);
+    };
+
+    FD.famodulusCallback = function (results) {
+        FD.timeRemote = performance.now() - FD.timeRemote;
+        //////////////// END remote performance measurement  ///////////////
+
+        if (FD.timeRemote < FD.timeLocal) {
+            FD.showRemoteTime(FD.timeRemote, true);
+            FD.showLocalTime(FD.timeLocal, false);
+        } else if (FD.timeRemote > FD.timeLocal) {
+            FD.showRemoteTime(FD.timeRemote, false);
+            FD.showLocalTime(FD.timeLocal, true);
+        } else {
+            FD.showRemoteTime(FD.timeRemote);
+        }
+
+        if (typeof results.r !== 'undefined') {
+            FD.resultRemote = results.r;
+            FD.showRemoteResult(FD.resultRemote, 1);
+        } else {
+            for (var i = 0; i < results.length - 1; i++) {
+                FD.resultRemote += results[i].r + ',\n';
+            }
+            FD.resultRemote += results[results.length - 1].r;
+            FD.showRemoteResult(FD.resultRemote, results.length);
+        }
+
+        FD.showDifference(FD.timeRemote, FD.timeLocal);
+        FD.showEqual(FD.resultRemote, FD.resultLocal);
+    };
 });

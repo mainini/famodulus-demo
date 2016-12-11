@@ -22,7 +22,11 @@ $('document').ready(function () {
             return;
         }
 
-        FD.algDirect(data);
+        switch ($('#select-method').val()) {
+            case 'direct':
+                FDAlg.algDirect(data);
+                break;
+        }
     });
 
     $('#btn-reset').click(function () {
