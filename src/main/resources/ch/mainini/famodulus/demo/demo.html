@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>famodulus - Demo Application - Basic Modexp</title>
+        <title>famodulus - Demo Application</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" rel="stylesheet">
     </head>
@@ -21,8 +21,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li id="nav-home"><a href="/index.html">Start</a></li>
-                        <li id="nav-modexp" class="active"><a href="/direct.html">Direct</a></li>
-                        <li id="nav-dec"><a href="/dec.html">DEC</a></li>
+                        <li id="nav-modexp" class="active"><a href="/demo.html">Demo</a></li>
                         <li id="nav-doc"><a href="/doc.html">API Doc</a></li>
                     </ul>
                 </div>
@@ -32,11 +31,17 @@
         <div class="container" role="main" style="padding-top:25px">
 
             <div class="page-header">
-                <h3 style="margin-bottom:0px">Direct Outsourcing</h3>
+                <h3 style="margin-bottom:0px">Outsourcing Demo</h3>
             </div>
 
-            <p>This page outsources a single or multiple modexps to a single server. Values for base,
-                exponent and modulus are simply transmitted directly and without any blinding.</p>
+            <p>On this page, outsourcing of a single or multiple modexps can be tried out and performance can be compared to calculations performed in the browser.
+                After choosing the outsourcing method, enter the parameters for the modexp(s) separated by comma. When calculating multiple modexps, default
+                parameters can be set which apply in case they are missing for a modexp.</p>
+
+            <p>Direct outsourcing requires a single server and simply sends base, exponent and modulus as is to the server without any blinding.</p>
+
+            <p>Outsourcing with basic decomposition (DEC) algebraically blinds either base or exponent or both, requiring two or four servers depending
+                on the blinding.</p>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -46,11 +51,32 @@
                     <div>
                         <form id="form-modexp" class="form-horizontal">
 
+                            <h4>Outsorcing Method and Options</h4>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="select-method">Method</label>
+                                <div class="col-xs-6">
+                                    <select id="select-method">
+                                        <option value="direct" selected="selected">Direct</option>
+                                        <option value="dec-base">DEC - Blinded Base</option>
+                                        <option value="dec-exponent">DEC - Blinded Exponent</option>
+                                        <option value="dec-full">DEC - Fully Blinded</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <p>Request <i>brief</i> response from server, containing only the results.</p>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2" for="input-brief">Brief Response</label>
+                                <div class="col-xs-1">
+                                    <input id="input-brief" class="form-control input-sm" type="checkbox" checked>
+                                </div>
+                            </div>
+
                             <h4>Server</h4>
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-server-1">famodulus Server</label>
                                 <div class="col-xs-6">
-                                    <input id="input-server-1" class="form-control" type="url">
+                                    <input id="input-server-1" class="form-control input-sm" type="url">
                                 </div>
                             </div>
 
@@ -60,21 +86,21 @@
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-base-default">Base</label>
                                 <div class="col-xs-10">
-                                    <input id="input-base-default" class="form-control" type="text" placeholder="Default base (hexadecimal)">
+                                    <input id="input-base-default" class="form-control input-sm" type="text" placeholder="Default base (hexadecimal)">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-exponent-default">Exponent</label>
                                 <div class="col-xs-10">
-                                    <input id="input-exponent-default" class="form-control" type="text" placeholder="Default exponent (hexadecimal)">
+                                    <input id="input-exponent-default" class="form-control input-sm" type="text" placeholder="Default exponent (hexadecimal)">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-modulus-default">Modulus</label>
                                 <div class="col-xs-10">
-                                    <input id="input-modulus-default" class="form-control" type="text" placeholder="Default modulus (hexadecimal)">
+                                    <input id="input-modulus-default" class="form-control input-sm" type="text" placeholder="Default modulus (hexadecimal)">
                                 </div>
                             </div>
 
@@ -94,21 +120,21 @@
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-bases">Bases</label>
                                 <div class="col-xs-10">
-                                    <textarea id="input-bases" class="form-control" rows="5"></textarea>
+                                    <textarea id="input-bases" class="form-control input-sm" rows="5"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-exponents">Exponents</label>
                                 <div class="col-xs-10">
-                                    <textarea id="input-exponents" class="form-control" rows="5"></textarea>
+                                    <textarea id="input-exponents" class="form-control input-sm" rows="5"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-moduli">Moduli</label>
                                 <div class="col-xs-10">
-                                    <textarea id="input-moduli" class="form-control" rows="5"></textarea>
+                                    <textarea id="input-moduli" class="form-control input-sm" rows="5"></textarea>
                                 </div>
                             </div>
 
@@ -119,16 +145,9 @@
                                     <button id="btn-add-p" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;1x Mod P3072</button>
                                 </div>
                             </div>
-                            <h4>Options</h4>
-                            <p>Request <i>brief</i> response from server, containing only the results.</p>
 
-                            <div class="form-group">
-                                <label class="control-label col-xs-2" for="input-brief">Brief Response</label>
-                                <div class="col-xs-1">
-                                    <input id="input-brief" class="form-control" type="checkbox" checked>
-                                </div>
-                            </div>
                             <hr>
+
                             <div class="form-group">
                                 <div class="col-xs-1"></div>
                                 <div class="col-xs-10">
@@ -167,13 +186,13 @@
                                 <div id="div-results-local" style="display:none">
                                     <div id="div-results-local-title"></div>
                                     <div class="col-xs-12">
-                                        <textarea id="input-results-local" class="form-control" rows="5" readonly></textarea>
+                                        <textarea id="input-results-local" class="form-control input-sm" rows="5" readonly></textarea>
                                     </div>
                                 </div>
                                 <div id="div-results-remote" style="display:none">
                                     <div id="div-results-remote-title"></div>
                                     <div class="col-xs-12">
-                                        <textarea id="input-results-remote" class="form-control" rows="5" readonly></textarea>
+                                        <textarea id="input-results-remote" class="form-control input-sm" rows="5" readonly></textarea>
                                     </div>
                                 </div>
                             </form>
