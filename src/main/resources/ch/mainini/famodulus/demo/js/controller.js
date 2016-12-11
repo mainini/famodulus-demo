@@ -22,6 +22,7 @@ $('document').ready(function () {
             return;
         }
 
+        FD.resetResults();
         switch ($('#select-method').val()) {
             case 'direct':
                 FDAlg.algDirect(data);
