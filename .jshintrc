@@ -30,6 +30,7 @@
   "globals": {
     "Famodulus": false,
     "FD": true,
+    "FDAlg": true,
     "BigInt": false
   }
 }
