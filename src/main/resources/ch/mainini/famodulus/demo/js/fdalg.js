@@ -5,7 +5,6 @@ $('document').ready(function () {
     window.FDAlg = FDAlg;
 
     FDAlg.algDirect = function (data) {
-console.log('guguseli');
         if (data.modexps.length === 0) {
             alert('Nothing to do!');
         } else if (data.modexps.length === 1) {

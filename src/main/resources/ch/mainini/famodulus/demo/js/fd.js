@@ -309,7 +309,6 @@ $('document').ready(function () {
     };
 
     FD.modexpRemote = function (data) {
-console.log('single!');
         var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
         //////////////// START remote performance measurement //////////////
         FD.timeRemote = performance.now();
@@ -317,7 +316,7 @@ console.log('single!');
     };
 
     FD.modexpsRemote = function (data) {
-console.log('multi!');        var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
+        var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
         //////////////// START remote performance measurement //////////////
         FD.timeRemote = performance.now();
         famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
