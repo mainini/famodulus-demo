@@ -29,7 +29,7 @@ $('document').ready(function () {
             var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
             //////////////// START remote performance measurement //////////////
             FD.timeRemote = performance.now();
-            famodulus.modexps(data.modexps, FD.famodulusCallback);
+            famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
         }
     };
 });

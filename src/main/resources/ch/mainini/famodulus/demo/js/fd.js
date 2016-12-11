@@ -71,9 +71,9 @@ $('document').ready(function () {
 
         data.modexps = [];
         for (var i = 0; i < bases.length; i++) {
-            data.modexps.push([bases[i] === '' ? data.defaultBase : bases[i],
-                exponents[i] === '' ? data.defaultExponent : exponents[i],
-                moduli[i] === '' ? data.defaultModulus : moduli[i]]);
+            data.modexps.push([bases[i] === '' ? undefined : bases[i],
+                exponents[i] === '' ? undefined : exponents[i],
+                moduli[i] === '' ? undefined : moduli[i]]);
         }
         return data;
     };
@@ -254,17 +254,24 @@ $('document').ready(function () {
 
     FD.modexpsLocal = function (data) {
         var results = [];
-        var i = 0;
+        var modexps = [];
 
+        for (var i = 0; i < data.modexps.length; i++) {
+            modexps.push([typeof data.modexps[i][0] === 'undefined' ? data.defaultBase : data.modexps[i][0],
+                typeof data.modexps[i][1] === 'undefined' ? data.defaultExponent : data.modexps[i][1],
+                typeof data.modexps[i][2] === 'undefined' ? data.defaultModulus : data.modexps[i][2]]);
+        }
+
+        var i = 0;
         //////////////// START local performance measurement ///////////////
         FD.timeLocal = performance.now();
-        for (; i < data.modexps.length; i++) {
-            results.push(BigInt.modexp(data.modexps[i][0], data.modexps[i][1], data.modexps[i][2]));
+        for (; i < modexps.length; i++) {
+            results.push(BigInt.modexp(modexps[i][0], modexps[i][1], modexps[i][2]));
         }
         FD.timeLocal = performance.now() - FD.timeLocal;
         //////////////// END local performance measurement  ////////////////
 
-        for (i = 0; i < results.length - 1; i++) {
+        for (var i = 0; i < results.length - 1; i++) {
             FD.resultLocal += results[i] !== '0' && results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
         }
         FD.resultLocal += results[i] !== '0' && results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
