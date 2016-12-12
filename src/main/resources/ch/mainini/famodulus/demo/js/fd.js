@@ -22,16 +22,6 @@ $('document').ready(function () {
         $('#btn-verificatum').prop('disabled', true);
     };
 
-    FD.randHexString = function (length) {
-        length = length === undefined ? FD.DEFAULT_RAND_LENGTH : length;
-        var retval = '';
-        while (retval.length < length) {
-            var value = Math.floor(Math.random() * 256);
-            retval += value < 10 ? '0' + value.toString(16) : value.toString(16);
-        }
-        return retval;
-    };
-
     FD.appendTo = function (field, value) {
         var curval = $(field).val().toString();
         if (curval.length === 0) {
@@ -321,4 +311,13 @@ $('document').ready(function () {
         FD.timeRemote = performance.now();
         famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
     };
+
+    FD.decExponent = function (data) {
+        alert('TO IMPLEMENT: decExponent!');
+    };
+
+    FD.decsExponent = function (data) {
+        alert('TO IMPLEMENT: decsExponent!');
+    };
+
 });

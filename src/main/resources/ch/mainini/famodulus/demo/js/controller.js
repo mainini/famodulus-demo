@@ -22,12 +22,29 @@ $('document').ready(function () {
             return;
         }
 
+        if (data.modexps.length === 0) {
+            alert('Nothing to do!');
+            return;
+        } else if (data.modexps.length === 1 && (data.defaultBase !== undefined ||
+                data.defaultExponent !== undefined || data.defaultModulus !== undefined)) {
+            alert('Default parameters not applicable for single modexp!');
+            return;
+        }
+
         FD.resetResults();
+        FD.showResults();
+        var local = data.modexps.length === 1 ? FD.modexpLocal : FD.modexpsLocal;
+        var remote;
         switch ($('#select-method').val()) {
             case 'direct':
-                FDAlg.algDirect(data);
+                remote = data.modexps.length === 1 ? FD.modexpRemote : FD.modexpsRemote;
+                break;
+            case 'dec-exponent':
+                remote = data.modexps.length === 1 ? FD.decExponent : FD.decsExponent;
                 break;
         }
+        local(data);
+        remote(data);
     });
 
     $('#btn-reset').click(function () {
@@ -40,27 +57,27 @@ $('document').ready(function () {
     });
 
     $('#btn-add-p').click(function () {
-        FD.appendTo('#input-bases', FD.randHexString());
-        FD.appendTo('#input-exponents', FD.randHexString());
+        FD.appendTo('#input-bases', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
+        FD.appendTo('#input-exponents', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
         FD.appendTo('#input-moduli', FD.P_3072);
     });
 
     $('#btn-add-rand').click(function () {
-        FD.appendTo('#input-bases', FD.randHexString());
-        FD.appendTo('#input-exponents', FD.randHexString());
-        FD.appendTo('#input-moduli', FD.randHexString());
+        FD.appendTo('#input-bases', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
+        FD.appendTo('#input-exponents', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
+        FD.appendTo('#input-moduli', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
     });
 
     $('#btn-base-rand').click(function () {
-        $('#input-base-default').val(FD.randHexString());
+        $('#input-base-default').val(window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
     });
 
     $('#btn-exponent-rand').click(function () {
-        $('#input-exponent-default').val(FD.randHexString());
+        $('#input-exponent-default').val(window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
     });
 
     $('#btn-modulus-rand').click(function () {
-        $('#input-modulus-default').val(FD.randHexString());
+        $('#input-modulus-default').val(window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
     });
 
     $('#btn-modulus-p').click(function () {
