@@ -8,6 +8,7 @@ $('document').ready(function () {
     FD.DEFAULT_RAND_LENGTH = 768;
     FD.DEFAULT_SERVER = 'http://localhost:8081/api/modexp/';
 
+    FD.algorithm = 'direct';
     FD.resultLocal = '';
     FD.resultRemote = '';
     FD.timeLocal = '';
@@ -70,6 +71,10 @@ $('document').ready(function () {
 
     FD.getServer = function (field) {
         return $(field).val().length > 0 ? $(field).val() : FD.DEFAULT_SERVER;
+    };
+
+    FD.setAlgorithm = function (algorithm) {
+        FD.algorithm = algorithm;
     };
 
     FD.createGlyph = function (glyph) {
@@ -271,7 +276,6 @@ $('document').ready(function () {
 
     FD.famodulusCallback = function (results) {
         FD.timeRemote = performance.now() - FD.timeRemote;
-        //////////////// END remote performance measurement  ///////////////
 
         if (FD.timeRemote < FD.timeLocal) {
             FD.showRemoteTime(FD.timeRemote, true);
@@ -300,24 +304,29 @@ $('document').ready(function () {
 
     FD.modexpRemote = function (data) {
         var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
-        //////////////// START remote performance measurement //////////////
-        FD.timeRemote = performance.now();
-        famodulus.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2], FD.famodulusCallback);
+        switch (FD.algorithm) {
+            case 'direct':
+                FD.timeRemote = performance.now();
+                famodulus.modexp(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2], FD.famodulusCallback);
+                break;
+            case 'dec-exponent':
+                FD.timeRemote = performance.now();
+                famodulus.decExponent(data.modexps[0][0], data.modexps[0][1], data.modexps[0][2], FD.famodulusCallback);
+                break;
+        }
     };
 
     FD.modexpsRemote = function (data) {
         var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
-        //////////////// START remote performance measurement //////////////
-        FD.timeRemote = performance.now();
-        famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
+        switch (FD.algorithm) {
+            case 'direct':
+                FD.timeRemote = performance.now();
+                famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
+                break;
+            case 'dec-exponent':
+                FD.timeRemote = performance.now();
+                famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
+                break;
+        }
     };
-
-    FD.decExponent = function (data) {
-        alert('TO IMPLEMENT: decExponent!');
-    };
-
-    FD.decsExponent = function (data) {
-        alert('TO IMPLEMENT: decsExponent!');
-    };
-
 });

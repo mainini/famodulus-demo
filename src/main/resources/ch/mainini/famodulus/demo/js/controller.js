@@ -31,20 +31,16 @@ $('document').ready(function () {
             return;
         }
 
+        FD.setAlgorithm($('#select-method').val());
         FD.resetResults();
         FD.showResults();
-        var local = data.modexps.length === 1 ? FD.modexpLocal : FD.modexpsLocal;
-        var remote;
-        switch ($('#select-method').val()) {
-            case 'direct':
-                remote = data.modexps.length === 1 ? FD.modexpRemote : FD.modexpsRemote;
-                break;
-            case 'dec-exponent':
-                remote = data.modexps.length === 1 ? FD.decExponent : FD.decsExponent;
-                break;
+        if (data.modexps.length === 1) {
+            FD.modexpLocal(data);
+            FD.modexpRemote(data);
+        } else {
+            FD.modexpsLocal(data);
+            FD.modexpsRemote(data);
         }
-        local(data);
-        remote(data);
     });
 
     $('#btn-reset').click(function () {
