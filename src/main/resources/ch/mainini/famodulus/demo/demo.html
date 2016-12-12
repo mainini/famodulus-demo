@@ -54,7 +54,7 @@
                             <h4>Outsorcing Method and Options</h4>
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="select-method">Method</label>
-                                <div class="col-xs-6">
+                                <div class="col-xs-4">
                                     <select id="select-method">
                                         <option value="direct" selected="selected">Direct</option>
                                         <!-- <option value="dec-base">DEC - Blinded Base</option> -->
@@ -62,10 +62,6 @@
                                         <!-- <option value="dec-full">DEC - Fully Blinded</option> -->
                                     </select>
                                 </div>
-                            </div>
-
-                            <p>Request <i>brief</i> response from server, containing only the results.</p>
-                            <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-brief">Brief Response</label>
                                 <div class="col-xs-1">
                                     <input id="input-brief" class="form-control input-sm" type="checkbox" checked>
@@ -99,19 +95,18 @@
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-modulus-default">Modulus</label>
-                                <div class="col-xs-10">
+                                <div class="col-xs-7">
                                     <input id="input-modulus-default" class="form-control input-sm" type="text" placeholder="Default modulus (hexadecimal)">
+                                </div>
+                                <div class="col-xs-3">
+                                    <button id="btn-default-p1024" type="button" class="btn btn-default">P_1024</button>
+                                    <button id="btn-default-p2048" type="button" class="btn btn-default">P_2048</button>
+                                    <button id="btn-default-p3072" type="button" class="btn btn-default">P_3072</button>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-xs-2"></div>
-                                <div class="col-xs-10">
-                                    <button id="btn-base-rand" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Rand Base</button>
-                                    <button id="btn-exponent-rand" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Rand Exponent</button>
-                                    <button id="btn-modulus-rand" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;Rand Modulus</button>
-                                    <button id="btn-modulus-p" type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>&nbsp;P3072 Modulus</button>
-                                </div>
                             </div>
 
                             <h4>Modexp(s)</h4>
@@ -139,17 +134,25 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-10">
-                                    <button id="btn-add-rand" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;1x Mod Rand</button>
-                                    <button id="btn-add-p" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;1x Mod P3072</button>
+                                <div class="col-xs-1"></div>
+                                <label class="control-label col-xs-1" for="input-rand-times"><span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>Add</label>
+                                <div class="col-xs-2">
+                                    <input id="input-rand-times" class="form-control input-sm" type="text" placeholder="1 Modexp(s)">
+                                </div>
+                                <label class="control-label col-xs-1" for="input-rand-bits">with</label>
+                                <div class="col-xs-2">
+                                    <input id="input-rand-bits" class="form-control input-sm" type="text" placeholder="2040 Bits">
+                                </div>
+                                <label class="control-label col-xs-1" for="btn-add-p1024">mod</label>
+                                <div class="col-xs-4">
+                                    <button id="btn-add-p1024" type="button" class="btn btn-default">P_1024</button>
+                                    <button id="btn-add-p2048" type="button" class="btn btn-default">P_2048</button>
+                                    <button id="btn-add-p3072" type="button" class="btn btn-default">P_3072</button>
                                 </div>
                             </div>
-
                             <hr>
 
                             <div class="form-group">
-                                <div class="col-xs-1"></div>
                                 <div class="col-xs-10">
                                     <button id="btn-calculate" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>&nbsp;Calculate</button>
                                     <button id="btn-reset" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-erase" aria-hidden="true"></span>&nbsp;Reset</button>
@@ -159,7 +162,6 @@
                             </div>
 
                         </form>
-
                     </div>
                 </div>
             </div>

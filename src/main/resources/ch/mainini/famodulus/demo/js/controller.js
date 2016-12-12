@@ -13,6 +13,44 @@ $('document').ready(function () {
         }
     }
 
+    function add(times, bits, modulus) {
+        times = times.length > 0 ? times : 1;
+        bits = bits.length > 0 ? bits : 2040;
+        if (bits % 8 !== 0) {
+            alert('Bits not a multiple of 8, reduced to ' + Math.floor(bits / 8) * 8 + '!');
+        }
+
+        for (var i = 0; i < times; i++) {
+            FD.appendTo('#input-bases', window.BigInt.rand(Math.floor(bits / 8)));
+            FD.appendTo('#input-exponents', window.BigInt.rand(Math.floor(bits / 8)));
+            FD.appendTo('#input-moduli', modulus);
+        }
+    }
+
+    $('#btn-default-p1024').click(function () {
+        $('#input-modulus-default').val(FD.P_1024);
+    });
+
+    $('#btn-default-p2048').click(function () {
+        $('#input-modulus-default').val(FD.P_2048);
+    });
+
+    $('#btn-default-p3072').click(function () {
+        $('#input-modulus-default').val(FD.P_3072);
+    });
+
+    $('#btn-add-p1024').click(function () {
+        add($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_1024);
+    });
+
+    $('#btn-add-p2048').click(function () {
+        add($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_2048);
+    });
+
+    $('#btn-add-p3072').click(function () {
+        add($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_3072);
+    });
+
     $('#btn-calculate').click(function () {
         var data;
         try {
@@ -49,35 +87,6 @@ $('document').ready(function () {
 
     $('#btn-verificatum').click(function () {
         FD.injectVerificatum();
-        alert('Verificatum library injected!');
-    });
-
-    $('#btn-add-p').click(function () {
-        FD.appendTo('#input-bases', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-        FD.appendTo('#input-exponents', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-        FD.appendTo('#input-moduli', FD.P_3072);
-    });
-
-    $('#btn-add-rand').click(function () {
-        FD.appendTo('#input-bases', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-        FD.appendTo('#input-exponents', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-        FD.appendTo('#input-moduli', window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-    });
-
-    $('#btn-base-rand').click(function () {
-        $('#input-base-default').val(window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-    });
-
-    $('#btn-exponent-rand').click(function () {
-        $('#input-exponent-default').val(window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-    });
-
-    $('#btn-modulus-rand').click(function () {
-        $('#input-modulus-default').val(window.BigInt.rand(FD.DEFAULT_RAND_LENGTH));
-    });
-
-    $('#btn-modulus-p').click(function () {
-        $('#input-modulus-default').val(FD.P_3072);
     });
 
     reset();
