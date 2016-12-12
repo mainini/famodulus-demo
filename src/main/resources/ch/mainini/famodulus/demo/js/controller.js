@@ -52,26 +52,24 @@ $('document').ready(function () {
     });
 
     $('#btn-calculate').click(function () {
-        var data;
-        try {
-            data = FD.parseFields();
-        } catch (e) {
-            alert('Error: ' + e);
+        if ($('#input-bases').val().length === 0 && $('#input-base-default').val().length === 0) {
+            alert('No base and no default base specified!');
             return;
         }
-
-        if (data.modexps.length === 0) {
-            alert('Nothing to do!');
+        if ($('#input-exponents').val().length === 0 && $('#input-exponent-default').val().length === 0) {
+            alert('No exponent and no default exponent specified!');
             return;
-        } else if (data.modexps.length === 1 && (data.defaultBase !== undefined ||
-                data.defaultExponent !== undefined || data.defaultModulus !== undefined)) {
-            alert('Default parameters not applicable for single modexp!');
+        }
+        if ($('#input-moduli').val().length === 0 && $('#input-modulus-default').val().length === 0) {
+            alert('No modulus and no default modulus specified!');
             return;
         }
 
         FD.setAlgorithm($('#select-method').val());
         FD.resetResults();
         FD.showResults();
+
+        var data = FD.parseFields();
         if (data.modexps.length === 1) {
             FD.modexpLocal(data);
             FD.modexpRemote(data);
