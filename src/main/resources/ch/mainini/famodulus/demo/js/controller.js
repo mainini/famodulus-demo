@@ -13,7 +13,7 @@ $('document').ready(function () {
         }
     }
 
-    function add(times, bits, modulus) {
+    function addRandomModexps(times, bits, modulus) {
         times = times.length > 0 ? times : 1;
         bits = bits.length > 0 ? bits : 2040;
         if (bits % 8 !== 0) {
@@ -40,15 +40,15 @@ $('document').ready(function () {
     });
 
     $('#btn-add-p1024').click(function () {
-        add($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_1024);
+        addRandomModexps($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_1024);
     });
 
     $('#btn-add-p2048').click(function () {
-        add($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_2048);
+        addRandomModexps($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_2048);
     });
 
     $('#btn-add-p3072').click(function () {
-        add($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_3072);
+        addRandomModexps($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_3072);
     });
 
     $('#btn-calculate').click(function () {
@@ -86,7 +86,12 @@ $('document').ready(function () {
     });
 
     $('#btn-verificatum').click(function () {
-        FD.injectVerificatum();
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
+        $('body').append(script);
+        window.BigInt.modexp = window.BigInt.modexpVerificatum;
+        $('#btn-verificatum').prop('disabled', true);
     });
 
     reset();
