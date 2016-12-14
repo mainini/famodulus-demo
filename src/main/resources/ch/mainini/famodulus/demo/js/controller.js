@@ -16,13 +16,10 @@ $('document').ready(function () {
     function addRandomModexps(times, bits, modulus) {
         times = times.length > 0 ? times : 1;
         bits = bits.length > 0 ? bits : 2040;
-        if (bits % 8 !== 0) {
-            alert('Bits not a multiple of 8, reduced to ' + Math.floor(bits / 8) * 8 + '!');
-        }
 
         for (var i = 0; i < times; i++) {
-            FD.appendTo('#input-bases', window.BigInt.rand(Math.floor(bits / 8)));
-            FD.appendTo('#input-exponents', window.BigInt.rand(Math.floor(bits / 8)));
+            FD.appendTo('#input-bases', window.BigInt.randString(bits));
+            FD.appendTo('#input-exponents', window.BigInt.randString(bits));
             FD.appendTo('#input-moduli', modulus);
         }
     }
