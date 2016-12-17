@@ -308,9 +308,13 @@ $('document').ready(function () {
                 FD.timeRemote = performance.now();
                 famodulus.modexp(modexps[0], modexps[1], modexps[2], FD.famodulusCallback);
                 break;
-            case 'dec-exponent':
+            case 'dec2':
                 FD.timeRemote = performance.now();
-                famodulus.decExponent(modexps[0], modexps[1], modexps[2], FD.famodulusCallback);
+                famodulus.decExponent(modexps[0], modexps[1], modexps[2], false, FD.famodulusCallback);
+                break;
+            case 'dec2-checked':
+                FD.timeRemote = performance.now();
+                famodulus.decExponent(modexps[0], modexps[1], modexps[2], true, FD.famodulusCallback);
                 break;
         }
     };
@@ -322,9 +326,13 @@ $('document').ready(function () {
                 FD.timeRemote = performance.now();
                 famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
                 break;
-            case 'dec-exponent':
+            case 'dec2':
                 FD.timeRemote = performance.now();
-                famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
+                famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, FD.famodulusCallback);
+                break;
+            case 'dec2-checked':
+                FD.timeRemote = performance.now();
+                famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, FD.famodulusCallback);
                 break;
         }
     };
