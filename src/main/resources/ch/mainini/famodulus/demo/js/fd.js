@@ -302,17 +302,19 @@ $('document').ready(function () {
             typeof data.modexps[0][1] === 'undefined' ? data.defaultExponent : data.modexps[0][1],
             typeof data.modexps[0][2] === 'undefined' ? data.defaultModulus : data.modexps[0][2]];
 
-        var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
         switch (FD.algorithm) {
             case 'direct':
+                var famodulus = new Famodulus([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
                 famodulus.modexp(modexps[0], modexps[1], modexps[2], FD.famodulusCallback);
                 break;
             case 'dec2':
+                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
                 famodulus.decExponent(modexps[0], modexps[1], modexps[2], false, FD.famodulusCallback);
                 break;
             case 'dec2-checked':
+                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
                 famodulus.decExponent(modexps[0], modexps[1], modexps[2], true, FD.famodulusCallback);
                 break;
@@ -320,17 +322,19 @@ $('document').ready(function () {
     };
 
     FD.modexpsRemote = function (data) {
-        var famodulus = new Famodulus([FD.getServer('#input-server-1')], $('#input-brief').is(':checked'));
         switch (FD.algorithm) {
             case 'direct':
+                var famodulus = new Famodulus([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
                 famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
                 break;
             case 'dec2':
+                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
                 famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, FD.famodulusCallback);
                 break;
             case 'dec2-checked':
+                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
                 famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, FD.famodulusCallback);
                 break;

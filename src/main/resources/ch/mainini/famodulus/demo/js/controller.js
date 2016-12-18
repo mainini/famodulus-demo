@@ -4,7 +4,9 @@ $('document').ready(function () {
     function reset() {
         FD.resetResults();
         $('#form-modexp').trigger('reset');
-        $('#input-server-1').attr('placeholder', FD.DEFAULT_SERVER);
+        $('#input-server-1-1').attr('placeholder', FD.DEFAULT_SERVER);
+        $('#input-server-2-1').attr('placeholder', FD.DEFAULT_SERVER);
+        $('#input-server-2-2').attr('placeholder', FD.DEFAULT_SERVER);
 
         if (typeof (verificatum) !== 'undefined') {
             $('#btn-verificatum').prop('disabled', true);
@@ -23,6 +25,23 @@ $('document').ready(function () {
             FD.appendTo('#input-moduli', modulus);
         }
     }
+
+    $('#select-method').change(function () {
+        switch ($('#select-method').val()) {
+            case 'direct':
+                $('#div-two-servers').hide();
+                $('#div-one-server').show();
+                break;
+            case 'dec2':
+                $('#div-one-server').hide();
+                $('#div-two-servers').show();
+                break;
+            case 'dec2-checked':
+                $('#div-one-server').hide();
+                $('#div-two-servers').show();
+                break;
+        }
+    });
 
     $('#btn-default-p1024').click(function () {
         $('#input-modulus-default').val(FD.P_1024);
