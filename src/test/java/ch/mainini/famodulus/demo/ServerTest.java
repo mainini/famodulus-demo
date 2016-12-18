@@ -42,7 +42,7 @@ public class ServerTest {
         server = Server.startServer();
 
         final Client c = ClientBuilder.newClient();
-        target = c.target(Server.BASE_URI);
+        target = c.target(Server.DEFAULT_BASE_URI);
     }
 
     /**

@@ -22,10 +22,9 @@ public class Server {
 //////////////////////////////////////// Constants
 
     /**
-     * Base URI on which the server listens
-     * @todo make configurable
+     * Default base URI on which the server listens
      */
-    public static final String BASE_URI = "http://localhost:8080/";
+    public static final String DEFAULT_BASE_URI = "http://localhost:8080/";
 
     /**
      * Enables/disables file caching for the static handler. If disabled,
@@ -46,8 +45,9 @@ public class Server {
      */
     public static void main(String[] args) throws IOException {
         LOG.info("Configuring and starting famodulus-demo webserver...");
-        final HttpServer server = startServer();
-        LOG.info(String.format("Webserver running at %s !", BASE_URI));
+        final String base = System.getProperty("famodulus.base", DEFAULT_BASE_URI);
+        final HttpServer server = startServer(base);
+        LOG.info(String.format("Webserver running at %s !", base));
 
         LOG.info("Hit enter to stop it...");
         System.in.read();
@@ -56,12 +56,22 @@ public class Server {
     }
 
     /**
-     * Starts the Grizzly HTTP server exposing JAX-RS resources defined in this application.
-     * @return Grizzly HTTP server.
+     * Starts the Grizzly HTTP server for serving static content at DEFAULT_BASE_URI.
+     *
+     * @return The running Grizzly HTTP server.
      */
     public static HttpServer startServer() {
+        return startServer(DEFAULT_BASE_URI);
+    }
+
+    /**
+     * Starts the Grizzly HTTP server for serving static content at the given URI.
+     * @param uri Full URI to start the server at
+     * @return Grizzly HTTP server.
+     */
+    public static HttpServer startServer(String uri) {
         LOG.fine("Creating server...");
-        final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI));
+        final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(uri));
 
         LOG.log(Level.FINE, "Setting up handler for static content (file caching: {0})...", ENABLE_CACHING);
         final CLStaticHttpHandler staticHandler = new CLStaticHttpHandler(Server.class.getClassLoader(), "ch/mainini/famodulus/demo/");
