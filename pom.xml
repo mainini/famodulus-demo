@@ -67,7 +67,7 @@
             </resource>
             <resource>
                 <targetPath>ch/mainini/famodulus/demo/js/</targetPath>
-                <directory>${basedir}/../famodulus-client/dist</directory>
+                <directory>${basedir}/../famodulus-client/.build</directory>
             </resource>
         </resources>
 
