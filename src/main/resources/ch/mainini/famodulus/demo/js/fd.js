@@ -1,6 +1,22 @@
 $('document').ready(function () {
     'use strict';
 
+    function _modexpLeemon(base, exponent, modulus) {
+        var b = str2bigInt(base, 16, 0);
+        var e = str2bigInt(exponent, 16, 0);
+        var m = str2bigInt(modulus, 16, 0);
+
+        return bigInt2str(powMod(b, e, m), 16);
+    }
+
+    function _modexpVerificatum(base, exponent, modulus) {
+        var b = new verificatum.arithm.LargeInteger(base);
+        var e = new verificatum.arithm.LargeInteger(exponent);
+        var m = new verificatum.arithm.LargeInteger(modulus);
+
+        return b.modPow(e, m).toHexString(16);
+    }
+
     var FD = {};
     window.FD = FD;
 
@@ -15,6 +31,26 @@ $('document').ready(function () {
     FD.resultRemote = '';
     FD.timeLocal = '';
     FD.timeRemote = '';
+
+    FD.modexp = _modexpLeemon;
+
+    FD.loadVerificatum = function() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
+        $('body').append(script);
+        FD.modexp = _modexpVerificatum;
+        $('#btn-verificatum').prop('disabled', true);
+    };
+
+    FD.randString = function (bitLength) {    // @todo CSPRNG?
+        var numNibbles = 2 * Math.floor(bitLength / 8) === 0 ? 1 : 2 * Math.floor(bitLength / 8);
+        var retval = '';
+        while (retval.length < numNibbles) {
+            retval += Math.floor(Math.random() * 16).toString(16);
+        }
+        return retval;
+    };
 
     FD.appendTo = function (field, value) {
         var curval = $(field).val().toString();
@@ -233,7 +269,7 @@ $('document').ready(function () {
 
         //////////////// START local performance measurement ///////////////
         FD.timeLocal = performance.now();
-        FD.resultLocal = BigInt.modexp(modexps[0], modexps[1], modexps[2]);
+        FD.resultLocal = FD.modexp(modexps[0], modexps[1], modexps[2]);
         FD.timeLocal = performance.now() - FD.timeLocal;
         //////////////// END local performance measurement  ////////////////
 
@@ -246,22 +282,22 @@ $('document').ready(function () {
         var results = [];
         var modexps = [];
 
-        for (var i = 0; i < data.modexps.length; i++) {
+        var i;
+        for (i = 0; i < data.modexps.length; i++) {
             modexps.push([typeof data.modexps[i][0] === 'undefined' ? data.defaultBase : data.modexps[i][0],
                 typeof data.modexps[i][1] === 'undefined' ? data.defaultExponent : data.modexps[i][1],
                 typeof data.modexps[i][2] === 'undefined' ? data.defaultModulus : data.modexps[i][2]]);
         }
 
-        var i = 0;
         //////////////// START local performance measurement ///////////////
         FD.timeLocal = performance.now();
-        for (; i < modexps.length; i++) {
-            results.push(BigInt.modexp(modexps[i][0], modexps[i][1], modexps[i][2]));
+        for (i = 0; i < modexps.length; i++) {
+            results.push(FD.modexp(modexps[i][0], modexps[i][1], modexps[i][2]));
         }
         FD.timeLocal = performance.now() - FD.timeLocal;
         //////////////// END local performance measurement  ////////////////
 
-        for (var i = 0; i < results.length - 1; i++) {
+        for (i = 0; i < results.length - 1; i++) {
             FD.resultLocal += results[i] !== '0' && results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
         }
         FD.resultLocal += results[i] !== '0' && results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
@@ -304,19 +340,19 @@ $('document').ready(function () {
 
         switch (FD.algorithm) {
             case 'direct':
-                var famodulus = new Famodulus([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
+                var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                famodulus.modexp(modexps[0], modexps[1], modexps[2], FD.famodulusCallback);
+                fam.modexp(modexps[0], modexps[1], modexps[2], FD.famodulusCallback);
                 break;
             case 'dec2':
-                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+                var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                famodulus.decExponent(modexps[0], modexps[1], modexps[2], false, FD.famodulusCallback);
+                fam.decExponent(modexps[0], modexps[1], modexps[2], false, FD.famodulusCallback);
                 break;
             case 'dec2-checked':
-                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+                var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                famodulus.decExponent(modexps[0], modexps[1], modexps[2], true, FD.famodulusCallback);
+                fam.decExponent(modexps[0], modexps[1], modexps[2], true, FD.famodulusCallback);
                 break;
         }
     };
@@ -324,19 +360,19 @@ $('document').ready(function () {
     FD.modexpsRemote = function (data) {
         switch (FD.algorithm) {
             case 'direct':
-                var famodulus = new Famodulus([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
+                var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                famodulus.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
+                fam.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
                 break;
             case 'dec2':
-                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+                var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, FD.famodulusCallback);
+                fam.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, FD.famodulusCallback);
                 break;
             case 'dec2-checked':
-                var famodulus = new Famodulus([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+                var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                famodulus.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, FD.famodulusCallback);
+                fam.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, FD.famodulusCallback);
                 break;
         }
     };

@@ -20,8 +20,8 @@ $('document').ready(function () {
         bits = bits.length > 0 ? bits : 2040;
 
         for (var i = 0; i < times; i++) {
-            FD.appendTo('#input-bases', window.BigInt.randString(bits));
-            FD.appendTo('#input-exponents', window.BigInt.randString(bits));
+            FD.appendTo('#input-bases', FD.randString(bits));
+            FD.appendTo('#input-exponents', FD.randString(bits));
             FD.appendTo('#input-moduli', modulus);
         }
     }
@@ -100,12 +100,7 @@ $('document').ready(function () {
     });
 
     $('#btn-verificatum').click(function () {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
-        $('body').append(script);
-        window.BigInt.modexp = window.BigInt.modexpVerificatum;
-        $('#btn-verificatum').prop('disabled', true);
+        FD.loadVerificatum();
     });
 
     reset();
