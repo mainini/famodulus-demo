@@ -1,6 +1,9 @@
 $('document').ready(function () {
     'use strict';
 
+    var FD = {};
+    window.FD = FD;
+
     function _modexpLeemon(base, exponent, modulus) {
         var b = str2bigInt(base, 16, 0);
         var e = str2bigInt(exponent, 16, 0);
@@ -17,8 +20,33 @@ $('document').ready(function () {
         return b.modPow(e, m).toHexString(16);
     }
 
-    var FD = {};
-    window.FD = FD;
+    function _famodulusCallback(results) {
+        FD.timeRemote = performance.now() - FD.timeRemote;
+
+        if (FD.timeRemote < FD.timeLocal) {
+            FD.showRemoteTime(FD.timeRemote, true);
+            FD.showLocalTime(FD.timeLocal, false);
+        } else if (FD.timeRemote > FD.timeLocal) {
+            FD.showRemoteTime(FD.timeRemote, false);
+            FD.showLocalTime(FD.timeLocal, true);
+        } else {
+            FD.showRemoteTime(FD.timeRemote);
+        }
+
+        if (typeof results.r !== 'undefined') {
+            FD.resultRemote = results.r;
+            FD.showRemoteResult(FD.resultRemote, 1);
+        } else {
+            for (var i = 0; i < results.length - 1; i++) {
+                FD.resultRemote += results[i].r + ',\n';
+            }
+            FD.resultRemote += results[results.length - 1].r;
+            FD.showRemoteResult(FD.resultRemote, results.length);
+        }
+
+        FD.showDifference(FD.timeRemote, FD.timeLocal);
+        FD.showEqual(FD.resultRemote, FD.resultLocal);
+    }
 
     FD.P_1024 = '80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001981bf';
     FD.P_2048 = '800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ad3af';
@@ -34,7 +62,7 @@ $('document').ready(function () {
 
     FD.modexp = _modexpLeemon;
 
-    FD.loadVerificatum = function() {
+    FD.loadVerificatum = function () {
         var script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
@@ -166,6 +194,28 @@ $('document').ready(function () {
         $('#input-results-local').val('');
     };
 
+    FD.showRemoteResult = function (result, count) {
+        $('#h-results-remote').remove();
+        var h = document.createElement('h4');
+        h.id = 'h-results-remote';
+        h.appendChild(document.createTextNode('Remote Results (' + count + '):'));
+        $('#div-results-remote-title').append(h);
+
+        $('#input-results-remote').val(result.toLowerCase());
+        $('#div-results-remote').show();
+    };
+
+    FD.showLocalResult = function (result, count) {
+        $('#h-results-local').remove();
+        var h = document.createElement('h4');
+        h.id = 'h-results-local';
+        h.appendChild(document.createTextNode('Local Results (' + count + '):'));
+        $('#div-results-local-title').append(h);
+
+        $('#input-results-local').val(result.toLowerCase());
+        $('#div-results-local').show();
+    };
+
     FD.showRemoteTime = function (time, better) {
         $('#p-time-remote').remove();
         var p = document.createElement('p');
@@ -240,28 +290,6 @@ $('document').ready(function () {
         $('#div-equal').show();
     };
 
-    FD.showRemoteResult = function (result, count) {
-        $('#h-results-remote').remove();
-        var h = document.createElement('h4');
-        h.id = 'h-results-remote';
-        h.appendChild(document.createTextNode('Remote Results (' + count + '):'));
-        $('#div-results-remote-title').append(h);
-
-        $('#input-results-remote').val(result.toLowerCase());
-        $('#div-results-remote').show();
-    };
-
-    FD.showLocalResult = function (result, count) {
-        $('#h-results-local').remove();
-        var h = document.createElement('h4');
-        h.id = 'h-results-local';
-        h.appendChild(document.createTextNode('Local Results (' + count + '):'));
-        $('#div-results-local-title').append(h);
-
-        $('#input-results-local').val(result.toLowerCase());
-        $('#div-results-local').show();
-    };
-
     FD.modexpLocal = function (data) {
         var modexps = [typeof data.modexps[0][0] === 'undefined' ? data.defaultBase : data.modexps[0][0],
             typeof data.modexps[0][1] === 'undefined' ? data.defaultExponent : data.modexps[0][1],
@@ -305,34 +333,6 @@ $('document').ready(function () {
         FD.showLocalResult(FD.resultLocal, results.length);
     };
 
-    FD.famodulusCallback = function (results) {
-        FD.timeRemote = performance.now() - FD.timeRemote;
-
-        if (FD.timeRemote < FD.timeLocal) {
-            FD.showRemoteTime(FD.timeRemote, true);
-            FD.showLocalTime(FD.timeLocal, false);
-        } else if (FD.timeRemote > FD.timeLocal) {
-            FD.showRemoteTime(FD.timeRemote, false);
-            FD.showLocalTime(FD.timeLocal, true);
-        } else {
-            FD.showRemoteTime(FD.timeRemote);
-        }
-
-        if (typeof results.r !== 'undefined') {
-            FD.resultRemote = results.r;
-            FD.showRemoteResult(FD.resultRemote, 1);
-        } else {
-            for (var i = 0; i < results.length - 1; i++) {
-                FD.resultRemote += results[i].r + ',\n';
-            }
-            FD.resultRemote += results[results.length - 1].r;
-            FD.showRemoteResult(FD.resultRemote, results.length);
-        }
-
-        FD.showDifference(FD.timeRemote, FD.timeLocal);
-        FD.showEqual(FD.resultRemote, FD.resultLocal);
-    };
-
     FD.modexpRemote = function (data) {
         var modexps = [typeof data.modexps[0][0] === 'undefined' ? data.defaultBase : data.modexps[0][0],
             typeof data.modexps[0][1] === 'undefined' ? data.defaultExponent : data.modexps[0][1],
@@ -342,17 +342,17 @@ $('document').ready(function () {
             case 'direct':
                 var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                fam.modexp(modexps[0], modexps[1], modexps[2], FD.famodulusCallback);
+                fam.modexp(modexps[0], modexps[1], modexps[2], _famodulusCallback);
                 break;
             case 'dec2':
                 var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                fam.decExponent(modexps[0], modexps[1], modexps[2], false, FD.famodulusCallback);
+                fam.decExponent(modexps[0], modexps[1], modexps[2], false, _famodulusCallback);
                 break;
             case 'dec2-checked':
                 var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                fam.decExponent(modexps[0], modexps[1], modexps[2], true, FD.famodulusCallback);
+                fam.decExponent(modexps[0], modexps[1], modexps[2], true, _famodulusCallback);
                 break;
         }
     };
@@ -362,17 +362,17 @@ $('document').ready(function () {
             case 'direct':
                 var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                fam.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, FD.famodulusCallback);
+                fam.modexps(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, _famodulusCallback);
                 break;
             case 'dec2':
                 var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                fam.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, FD.famodulusCallback);
+                fam.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, _famodulusCallback);
                 break;
             case 'dec2-checked':
                 var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
                 FD.timeRemote = performance.now();
-                fam.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, FD.famodulusCallback);
+                fam.decsExponent(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, _famodulusCallback);
                 break;
         }
     };
