@@ -28,9 +28,11 @@
   "forin": true,
   "smarttabs": true,
   "globals": {
-    "Famodulus": false,
-    "FD": true,
-    "FDAlg": true,
-    "BigInt": false
+    "FD": false,
+    "FamodulusClient": false,
+    "str2bigInt": false,
+    "bigInt2str": false,
+    "powMod": false,
+    "verificatum": false
   }
 }
