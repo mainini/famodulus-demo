@@ -1,4 +1,4 @@
-/* global $, FD, verificatum */
+/* global $, FD, verificatum, alert */
 
 $('document').ready(function () {
   'use strict';
