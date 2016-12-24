@@ -9,6 +9,8 @@ $('document').ready(function () {
     $('#input-server-1-1').attr('placeholder', FD.DEFAULT_SERVER);
     $('#input-server-2-1').attr('placeholder', FD.DEFAULT_SERVER);
     $('#input-server-2-2').attr('placeholder', FD.DEFAULT_SERVER);
+    $('#div-two-servers').hide();
+    $('#div-one-server').show();
 
     if (typeof (verificatum) !== 'undefined') {
       $('#btn-verificatum').prop('disabled', true);
