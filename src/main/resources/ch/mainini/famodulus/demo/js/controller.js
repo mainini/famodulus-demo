@@ -3,6 +3,11 @@
 $('document').ready(function () {
   'use strict';
 
+  window.debug = function () {
+    $('#btn-calculate-local').show();
+    $('#btn-calculate-remote').show();
+  };
+
   function reset () {
     FD.resetResults();
     $('#form-modexp').trigger('reset');
@@ -28,6 +33,27 @@ $('document').ready(function () {
       FD.appendTo('#input-exponents', FD.randString(bits));
       FD.appendTo('#input-moduli', modulus);
     }
+  }
+
+  function prepareCalculation () {
+    if ($('#input-bases').val().length === 0 && $('#input-base-default').val().length === 0) {
+      alert('No base and no default base specified!');
+      return;
+    }
+    if ($('#input-exponents').val().length === 0 && $('#input-exponent-default').val().length === 0) {
+      alert('No exponent and no default exponent specified!');
+      return;
+    }
+    if ($('#input-moduli').val().length === 0 && $('#input-modulus-default').val().length === 0) {
+      alert('No modulus and no default modulus specified!');
+      return;
+    }
+
+    FD.setAlgorithm($('#select-method').val());
+    FD.resetResults();
+    FD.showResults();
+
+    return FD.parseFields();
   }
 
   $('#select-method').change(function () {
@@ -72,29 +98,30 @@ $('document').ready(function () {
   });
 
   $('#btn-calculate').click(function () {
-    if ($('#input-bases').val().length === 0 && $('#input-base-default').val().length === 0) {
-      alert('No base and no default base specified!');
-      return;
-    }
-    if ($('#input-exponents').val().length === 0 && $('#input-exponent-default').val().length === 0) {
-      alert('No exponent and no default exponent specified!');
-      return;
-    }
-    if ($('#input-moduli').val().length === 0 && $('#input-modulus-default').val().length === 0) {
-      alert('No modulus and no default modulus specified!');
-      return;
-    }
-
-    FD.setAlgorithm($('#select-method').val());
-    FD.resetResults();
-    FD.showResults();
-
-    var data = FD.parseFields();
+    var data = prepareCalculation();
     if (data.modexps.length === 1) {
       FD.modexpLocal(data);
       FD.modexpRemote(data);
     } else {
       FD.modexpsLocal(data);
+      FD.modexpsRemote(data);
+    }
+  });
+
+  $('#btn-calculate-local').click(function () {
+    var data = prepareCalculation();
+    if (data.modexps.length === 1) {
+      FD.modexpLocal(data);
+    } else {
+      FD.modexpsLocal(data);
+    }
+  });
+
+  $('#btn-calculate-remote').click(function () {
+    var data = prepareCalculation();
+    if (data.modexps.length === 1) {
+      FD.modexpRemote(data);
+    } else {
       FD.modexpsRemote(data);
     }
   });
