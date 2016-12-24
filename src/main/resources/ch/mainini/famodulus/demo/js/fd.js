@@ -35,7 +35,7 @@ $('document').ready(function () {
       FD.showRemoteTime(FD.timeRemote);
     }
 
-    if (typeof results.r !== 'undefined') {
+    if (results.r) {
       FD.resultRemote = results.r;
       FD.showRemoteResult(FD.resultRemote, 1);
     } else {
@@ -117,11 +117,11 @@ $('document').ready(function () {
 
     var count = Math.max(Math.max(bases.length, exponents.length), moduli.length);
     count = count === 0 ? 1 : count;
-    data.modexps = [];
+    data.modexps = [count];
     for (var i = 0; i < count; i++) {
-      data.modexps.push([bases[i] === '' ? undefined : bases[i],
+      data.modexps[i] = [bases[i] === '' ? undefined : bases[i],
         exponents[i] === '' ? undefined : exponents[i],
-        moduli[i] === '' ? undefined : moduli[i]]);
+        moduli[i] === '' ? undefined : moduli[i]];
     }
     return data;
   };
@@ -276,8 +276,8 @@ $('document').ready(function () {
     p.id = 'p-equal';
 
     if ((result1 === undefined && result2 !== undefined) ||
-            (result2 === undefined && result1 !== undefined) ||
-            result1.toLowerCase() !== result2.toLowerCase()) {
+        (result2 === undefined && result1 !== undefined) ||
+        result1.toLowerCase() !== result2.toLowerCase()) {
       p.setAttribute('class', 'text-danger');
       p.appendChild(FD.createGlyph('nok'));
       p.appendChild(document.createTextNode('\xa0The results differ!'));
@@ -292,13 +292,10 @@ $('document').ready(function () {
   };
 
   FD.modexpLocal = function (data) {
-    var modexps = [typeof data.modexps[0][0] === 'undefined' ? data.defaultBase : data.modexps[0][0],
-      typeof data.modexps[0][1] === 'undefined' ? data.defaultExponent : data.modexps[0][1],
-      typeof data.modexps[0][2] === 'undefined' ? data.defaultModulus : data.modexps[0][2]];
-
+    var modexp = [data.modexps[0][0] || data.defaultBase, data.modexps[0][1] || data.defaultExponent, data.modexps[0][2] || data.defaultModulus];
     // ======= START local performance measurement =======
     FD.timeLocal = performance.now();
-    FD.resultLocal = FD.modexp(modexps[0], modexps[1], modexps[2]);
+    FD.resultLocal = FD.modexp(modexp[0], modexp[1], modexp[2]);
     FD.timeLocal = performance.now() - FD.timeLocal;
     // ======= END local performance measurement =======
 
@@ -308,52 +305,46 @@ $('document').ready(function () {
   };
 
   FD.modexpsLocal = function (data) {
-    var results = [];
-    var modexps = [];
-
-    var i;
-    for (i = 0; i < data.modexps.length; i++) {
-      modexps.push([typeof data.modexps[i][0] === 'undefined' ? data.defaultBase : data.modexps[i][0],
-        typeof data.modexps[i][1] === 'undefined' ? data.defaultExponent : data.modexps[i][1],
-        typeof data.modexps[i][2] === 'undefined' ? data.defaultModulus : data.modexps[i][2]]);
-    }
+    var modexps = data.modexps.map(function (modexp) {
+      return [modexp[0] || data.defaultBase, modexp[1] || data.defaultExponent, modexp[2] || data.defaultModulus];
+    });
 
     // ======= START local performance measurement =======
     FD.timeLocal = performance.now();
-    for (i = 0; i < modexps.length; i++) {
-      results.push(FD.modexp(modexps[i][0], modexps[i][1], modexps[i][2]));
-    }
+    var results = modexps.map(function (modexp) {
+      return FD.modexp(modexp[0], modexp[1], modexp[2]);
+    });
     FD.timeLocal = performance.now() - FD.timeLocal;
     // ======= END local performance measurement =======
 
-    for (i = 0; i < results.length - 1; i++) {
-      FD.resultLocal += results[i] !== '0' && results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
-    }
-    FD.resultLocal += results[i] !== '0' && results[results.length - 1].startsWith('0') ? results[results.length - 1].substring(1) : results[results.length - 1];
+    // some formatting to have local results in the same format as remote ones
+    results.forEach(function (result) {
+      FD.resultLocal += result !== '0' && result.startsWith('0') ? result.substring(1) + ',\n' : result + ',\n';
+    });
+    FD.resultLocal = FD.resultLocal.substring(0, FD.resultLocal.length - 2);  // remove trailing ',\n'
+
     FD.showLocalTime(FD.timeLocal);
     FD.showLocalResult(FD.resultLocal, results.length);
   };
 
   FD.modexpRemote = function (data) {
-    var modexps = [typeof data.modexps[0][0] === 'undefined' ? data.defaultBase : data.modexps[0][0],
-      typeof data.modexps[0][1] === 'undefined' ? data.defaultExponent : data.modexps[0][1],
-      typeof data.modexps[0][2] === 'undefined' ? data.defaultModulus : data.modexps[0][2]];
+    var modexp = [data.modexps[0][0] || data.defaultBase, data.modexps[0][1] || data.defaultExponent, data.modexps[0][2] || data.defaultModulus];
 
     switch (FD.algorithm) {
       case 'direct':
         var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
         FD.timeRemote = performance.now();
-        fam.direct(modexps[0], modexps[1], modexps[2], _famodulusCallback);
+        fam.direct(modexp[0], modexp[1], modexp[2], _famodulusCallback);
         break;
       case 'dec2':
         var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
         FD.timeRemote = performance.now();
-        fam.decExponent(modexps[0], modexps[1], modexps[2], false, _famodulusCallback);
+        fam.decExponent(modexp[0], modexp[1], modexp[2], false, _famodulusCallback);
         break;
       case 'dec2-checked':
         var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
         FD.timeRemote = performance.now();
-        fam.decExponent(modexps[0], modexps[1], modexps[2], true, _famodulusCallback);
+        fam.decExponent(modexp[0], modexp[1], modexp[2], true, _famodulusCallback);
         break;
     }
   };
