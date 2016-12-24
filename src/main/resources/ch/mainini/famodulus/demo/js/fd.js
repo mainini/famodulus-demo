@@ -296,11 +296,11 @@ $('document').ready(function () {
       typeof data.modexps[0][1] === 'undefined' ? data.defaultExponent : data.modexps[0][1],
       typeof data.modexps[0][2] === 'undefined' ? data.defaultModulus : data.modexps[0][2]];
 
-    //////////////// START local performance measurement ///////////////
+    // ======= START local performance measurement =======
     FD.timeLocal = performance.now();
     FD.resultLocal = FD.modexp(modexps[0], modexps[1], modexps[2]);
     FD.timeLocal = performance.now() - FD.timeLocal;
-    //////////////// END local performance measurement  ////////////////
+    // ======= END local performance measurement =======
 
     FD.resultLocal = FD.resultLocal !== '0' && FD.resultLocal.startsWith('0') ? FD.resultLocal.substring(1) : FD.resultLocal;
     FD.showLocalTime(FD.timeLocal);
@@ -318,13 +318,13 @@ $('document').ready(function () {
         typeof data.modexps[i][2] === 'undefined' ? data.defaultModulus : data.modexps[i][2]]);
     }
 
-    //////////////// START local performance measurement ///////////////
+    // ======= START local performance measurement =======
     FD.timeLocal = performance.now();
     for (i = 0; i < modexps.length; i++) {
       results.push(FD.modexp(modexps[i][0], modexps[i][1], modexps[i][2]));
     }
     FD.timeLocal = performance.now() - FD.timeLocal;
-    //////////////// END local performance measurement  ////////////////
+    // ======= END local performance measurement =======
 
     for (i = 0; i < results.length - 1; i++) {
       FD.resultLocal += results[i] !== '0' && results[i].startsWith('0') ? results[i].substring(1) + ',\n' : results[i] + ',\n';
