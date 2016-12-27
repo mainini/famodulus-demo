@@ -17,11 +17,8 @@ $('document').ready(function () {
     $('#div-two-servers').hide();
     $('#div-one-server').show();
 
-    if (typeof (verificatum) !== 'undefined') {
-      $('#btn-verificatum').prop('disabled', true);
-    } else {
-      $('#btn-verificatum').prop('disabled', false);
-    }
+    if (typeof (verificatum) !== 'undefined') $('#btn-verificatum').prop('disabled', true);
+    else $('#btn-verificatum').prop('disabled', false);
   }
 
   function addRandomModexps (times, bits, modulus) {
@@ -110,20 +107,14 @@ $('document').ready(function () {
 
   $('#btn-calculate-local').click(function () {
     var data = prepareCalculation();
-    if (data.modexps.length === 1) {
-      FD.modexpLocal(data);
-    } else {
-      FD.modexpsLocal(data);
-    }
+    if (data.modexps.length === 1) FD.modexpLocal(data);
+    else FD.modexpsLocal(data);
   });
 
   $('#btn-calculate-remote').click(function () {
     var data = prepareCalculation();
-    if (data.modexps.length === 1) {
-      FD.modexpRemote(data);
-    } else {
-      FD.modexpsRemote(data);
-    }
+    if (data.modexps.length === 1) FD.modexpRemote(data);
+    else FD.modexpsRemote(data);
   });
 
   $('#btn-reset').click(function () {

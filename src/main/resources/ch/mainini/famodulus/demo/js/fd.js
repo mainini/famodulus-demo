@@ -84,25 +84,16 @@ $('document').ready(function () {
 
   FD.appendTo = function (field, value) {
     var curval = $(field).val().toString();
-    if (curval.length === 0) {
-      $(field).val(value);
-    } else if (curval.endsWith(',')) {
-      $(field).val(curval + '\n' + value);
-    } else if (curval.endsWith(',\n')) {
-      $(field).val(curval + value);
-    } else if (curval.endsWith('\n')) {
-      $(field).val(curval + ',' + value);
-    } else {
-      $(field).val(curval + ',\n' + value);
-    }
+    if (curval.length === 0) $(field).val(value);
+    else if (curval.endsWith(',')) $(field).val(curval + '\n' + value);
+    else if (curval.endsWith(',\n')) $(field).val(curval + value);
+    else if (curval.endsWith('\n')) $(field).val(curval + ',' + value);
+    else $(field).val(curval + ',\n' + value);
   };
 
   FD.stringToList = function (val) {
-    if (val.length === 0) {
-      return [];
-    } else {
-      return val.replace(/\s+/gm, '').split(',');
-    }
+    if (val.length === 0) return [];
+    else return val.replace(/\s+/gm, '').split(',');
   };
 
   FD.parseFields = function () {
