@@ -339,7 +339,7 @@ $('document').ready(function () {
     })().then(result => {
       _remoteDone(result);
     }).catch(ex => {
-      alert('An error occured, see console for details!');
+      alert('An error occured: ' + ex);
       console.log(ex);
     });
   };
@@ -361,7 +361,7 @@ $('document').ready(function () {
     })().then(result => {
       _remoteDone(result);
     }).catch(ex => {
-      alert('An error occured, see console for details!');
+      alert('An error occured: ' + ex);
       console.log(ex);
     });
   };
