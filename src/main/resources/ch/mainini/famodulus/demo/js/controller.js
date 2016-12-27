@@ -96,12 +96,14 @@ $('document').ready(function () {
 
   $('#btn-calculate').click(function () {
     var data = prepareCalculation();
-    if (data.modexps.length === 1) {
-      FD.modexpLocal(data);
-      FD.modexpRemote(data);
-    } else {
-      FD.modexpsLocal(data);
-      FD.modexpsRemote(data);
+    if (data) {
+      if (data.modexps.length === 1) {
+        FD.modexpLocal(data);
+        FD.modexpRemote(data);
+      } else {
+        FD.modexpsLocal(data);
+        FD.modexpsRemote(data);
+      }
     }
   });
 
