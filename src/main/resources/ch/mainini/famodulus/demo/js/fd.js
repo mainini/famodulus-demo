@@ -296,20 +296,16 @@ $('document').ready(function () {
   };
 
   FD.modexpsLocal = function (data) {
-    var modexps = data.modexps.map(function (modexp) {
-      return [modexp[0] || data.defaultBase, modexp[1] || data.defaultExponent, modexp[2] || data.defaultModulus];
-    });
+    var modexps = data.modexps.map(modexp => [modexp[0] || data.defaultBase, modexp[1] || data.defaultExponent, modexp[2] || data.defaultModulus]);
 
     // ======= START local performance measurement =======
     FD.timeLocal = performance.now();
-    var results = modexps.map(function (modexp) {
-      return FD.modexp(modexp[0], modexp[1], modexp[2]);
-    });
+    var results = modexps.map(modexp => FD.modexp(modexp[0], modexp[1], modexp[2]));
     FD.timeLocal = performance.now() - FD.timeLocal;
     // ======= END local performance measurement =======
 
     // some formatting to have local results in the same format as remote ones
-    results.forEach(function (result) {
+    results.forEach(result => {
       FD.resultLocal += result !== '0' && result.startsWith('0') ? result.substring(1) + ',\n' : result + ',\n';
     });
     FD.resultLocal = FD.resultLocal.substring(0, FD.resultLocal.length - 2);  // remove trailing ',\n'
