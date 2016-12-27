@@ -1,4 +1,4 @@
-/* global FamodulusClient, performance, $, str2bigInt, bigInt2str, powMod, verificatum */
+/* global alert, FamodulusClient, performance, $, str2bigInt, bigInt2str, powMod, verificatum */
 
 $('document').ready(function () {
   'use strict';
@@ -22,7 +22,7 @@ $('document').ready(function () {
     return b.modPow(e, m).toHexString(16);
   }
 
-  function _famodulusCallback (results) {
+  function _remoteDone (results) {
     FD.timeRemote = performance.now() - FD.timeRemote;
 
     if (FD.timeRemote < FD.timeLocal) {
@@ -98,6 +98,13 @@ $('document').ready(function () {
 
   FD.parseFields = function () {
     var data = {};
+
+    if (FD.algorithm === 'direct') data.servers = [FD.getServer('#input-server-1-1')];
+    else if (FD.algorithm === 'dec2') data.servers = [FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')];
+    else if (FD.algorithm === 'dec2-checked') data.servers = [FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')];
+
+    data.brief = $('#input-brief').is(':checked');
+
     data.defaultBase = $('#input-base-default').val().length > 0 ? $('#input-base-default').val() : undefined;
     data.defaultExponent = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
     data.defaultModulus = $('#input-modulus-default').val().length > 0 ? $('#input-modulus-default').val() : undefined;
@@ -316,43 +323,46 @@ $('document').ready(function () {
 
   FD.modexpRemote = function (data) {
     var modexp = [data.modexps[0][0] || data.defaultBase, data.modexps[0][1] || data.defaultExponent, data.modexps[0][2] || data.defaultModulus];
+    var fam = new FamodulusClient(data.servers, data.brief);
 
-    switch (FD.algorithm) {
-      case 'direct':
-        var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
+    (function () {
+      if (FD.algorithm === 'direct') {
         FD.timeRemote = performance.now();
-        fam.direct(modexp[0], modexp[1], modexp[2], _famodulusCallback);
-        break;
-      case 'dec2':
-        var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+        return fam.direct(modexp[0], modexp[1], modexp[2]);
+      } else if (FD.algorithm === 'dec2') {
         FD.timeRemote = performance.now();
-        fam.decExponent(modexp[0], modexp[1], modexp[2], false, _famodulusCallback);
-        break;
-      case 'dec2-checked':
-        var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+        return fam.decExponent(modexp[0], modexp[1], modexp[2], false);
+      } else if (FD.algorithm === 'dec2-checked') {
         FD.timeRemote = performance.now();
-        fam.decExponent(modexp[0], modexp[1], modexp[2], true, _famodulusCallback);
-        break;
-    }
+        return fam.decExponent(modexp[0], modexp[1], modexp[2], true);
+      }
+    })().then(result => {
+      _remoteDone(result);
+    }).catch(ex => {
+      alert('An error occured, see console for details!');
+      console.log(ex);
+    });
   };
 
   FD.modexpsRemote = function (data) {
-    switch (FD.algorithm) {
-      case 'direct':
-        var fam = new FamodulusClient([FD.getServer('#input-server-1-1')], $('#input-brief').is(':checked'));
+    var fam = new FamodulusClient(data.servers, data.brief);
+
+    (function () {
+      if (FD.algorithm === 'direct') {
         FD.timeRemote = performance.now();
-        fam.directs(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, _famodulusCallback);
-        break;
-      case 'dec2':
-        var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+        return fam.directs(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus);
+      } else if (FD.algorithm === 'dec2') {
         FD.timeRemote = performance.now();
-        fam.decExponents(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false, _famodulusCallback);
-        break;
-      case 'dec2-checked':
-        var fam = new FamodulusClient([FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')], $('#input-brief').is(':checked'));
+        return fam.decExponents(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false);
+      } else if (FD.algorithm === 'dec2-checked') {
         FD.timeRemote = performance.now();
-        fam.decExponents(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true, _famodulusCallback);
-        break;
-    }
+        return fam.decExponents(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true);
+      }
+    })().then(result => {
+      _remoteDone(result);
+    }).catch(ex => {
+      alert('An error occured, see console for details!');
+      console.log(ex);
+    });
   };
 });
