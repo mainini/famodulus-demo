@@ -10,6 +10,8 @@ $('document').ready(function () {
 
   function reset () {
     FD.resetResults();
+
+    // bring back form to initial state
     $('#form-modexp').trigger('reset');
     $('#input-server-1-1').attr('placeholder', FD.DEFAULT_SERVER);
     $('#input-server-2-1').attr('placeholder', FD.DEFAULT_SERVER);
@@ -33,23 +35,15 @@ $('document').ready(function () {
   }
 
   function prepareCalculation () {
-    if ($('#input-bases').val().length === 0 && $('#input-base-default').val().length === 0) {
-      alert('No base and no default base specified!');
-      return;
+    if ($('#input-bases').val().length === 0 && $('#input-base-default').val().length === 0) alert('No base and no default base specified!');
+    else if ($('#input-exponents').val().length === 0 && $('#input-exponent-default').val().length === 0) alert('No exponent and no default exponent specified!');
+    else if ($('#input-moduli').val().length === 0 && $('#input-modulus-default').val().length === 0) alert('No modulus and no default modulus specified!');
+    else {
+      FD.setAlgorithm($('#select-method').val());
+      FD.resetResults();
+      FD.showResults();
+      return FD.parseFields();
     }
-    if ($('#input-exponents').val().length === 0 && $('#input-exponent-default').val().length === 0) {
-      alert('No exponent and no default exponent specified!');
-      return;
-    }
-    if ($('#input-moduli').val().length === 0 && $('#input-modulus-default').val().length === 0) {
-      alert('No modulus and no default modulus specified!');
-      return;
-    }
-
-    FD.setAlgorithm($('#select-method').val());
-    FD.resetResults();
-    FD.showResults();
-    return FD.parseFields();
   }
 
   $('#select-method').change(function () {
