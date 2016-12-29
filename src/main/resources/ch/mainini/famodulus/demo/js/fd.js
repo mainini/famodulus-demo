@@ -265,9 +265,22 @@ $('document').ready(function () {
   };
 
   FD.modexpLocal = function (data) {
+    var results;
     FD.timeLocal = performance.now();
-    var modexps = data.modexps.map(modexp => ({b: modexp.b || data.defaults.b, e: modexp.e || data.defaults.e, m: modexp.m || data.defaults.m}));
-    var results = modexps.map(modexp => FD.modexp(modexp));
+    if (data.defaults.b || data.defaults.e || data.defaults.m) {
+      results = (data.modexps.map(modexp =>
+        ({b: modexp.b || data.defaults.b,
+          e: modexp.e || data.defaults.e,
+          m: modexp.m || data.defaults.m
+        })
+      )).map(modexp =>
+        FD.modexp(modexp)
+      );
+    } else {
+      results = data.modexps.map(modexp =>
+        FD.modexp(modexp)
+      );
+    }
     FD.timeLocal = performance.now() - FD.timeLocal;
 
     // some formatting to have local results in the same format as remote ones
