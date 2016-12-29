@@ -49,7 +49,6 @@ $('document').ready(function () {
     FD.setAlgorithm($('#select-method').val());
     FD.resetResults();
     FD.showResults();
-
     return FD.parseFields();
   }
 
@@ -97,26 +96,19 @@ $('document').ready(function () {
   $('#btn-calculate').click(function () {
     var data = prepareCalculation();
     if (data) {
-      if (data.modexps.length === 1) {
-        FD.modexpLocal(data);
-        FD.modexpRemote(data);
-      } else {
-        FD.modexpsLocal(data);
-        FD.modexpsRemote(data);
-      }
+      FD.modexpLocal(data);
+      FD.modexpRemote(data);
     }
   });
 
   $('#btn-calculate-local').click(function () {
     var data = prepareCalculation();
-    if (data.modexps.length === 1) FD.modexpLocal(data);
-    else FD.modexpsLocal(data);
+    if (data) FD.modexpLocal(data);
   });
 
   $('#btn-calculate-remote').click(function () {
     var data = prepareCalculation();
-    if (data.modexps.length === 1) FD.modexpRemote(data);
-    else FD.modexpsRemote(data);
+    if (data) FD.modexpRemote(data);
   });
 
   $('#btn-reset').click(function () {

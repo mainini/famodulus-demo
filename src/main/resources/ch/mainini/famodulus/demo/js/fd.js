@@ -6,48 +6,20 @@ $('document').ready(function () {
   var FD = {};
   window.FD = FD;
 
-  function _modexpLeemon (base, exponent, modulus) {
-    var b = str2bigInt(base, 16, 0);
-    var e = str2bigInt(exponent, 16, 0);
-    var m = str2bigInt(modulus, 16, 0);
+  function _modexpLeemon (modexp) {
+    var b = str2bigInt(modexp.b, 16, 0);
+    var e = str2bigInt(modexp.e, 16, 0);
+    var m = str2bigInt(modexp.m, 16, 0);
 
     return bigInt2str(powMod(b, e, m), 16);
   }
 
-  function _modexpVerificatum (base, exponent, modulus) {
-    var b = new verificatum.arithm.LargeInteger(base);
-    var e = new verificatum.arithm.LargeInteger(exponent);
-    var m = new verificatum.arithm.LargeInteger(modulus);
+  function _modexpVerificatum (modexp) {
+    var b = new verificatum.arithm.LargeInteger(modexp.b);
+    var e = new verificatum.arithm.LargeInteger(modexp.e);
+    var m = new verificatum.arithm.LargeInteger(modexp.m);
 
     return b.modPow(e, m).toHexString(16);
-  }
-
-  function _remoteDone (results) {
-    FD.timeRemote = performance.now() - FD.timeRemote;
-
-    if (FD.timeRemote < FD.timeLocal) {
-      FD.showRemoteTime(FD.timeRemote, true);
-      FD.showLocalTime(FD.timeLocal, false);
-    } else if (FD.timeRemote > FD.timeLocal) {
-      FD.showRemoteTime(FD.timeRemote, false);
-      FD.showLocalTime(FD.timeLocal, true);
-    } else {
-      FD.showRemoteTime(FD.timeRemote);
-    }
-
-    if (results.r) {
-      FD.resultRemote = results.r;
-      FD.showRemoteResult(FD.resultRemote, 1);
-    } else {
-      for (var i = 0; i < results.length - 1; i++) {
-        FD.resultRemote += results[i].r + ',\n';
-      }
-      FD.resultRemote += results[results.length - 1].r;
-      FD.showRemoteResult(FD.resultRemote, results.length);
-    }
-
-    FD.showDifference(FD.timeRemote, FD.timeLocal);
-    FD.showEqual(FD.resultRemote, FD.resultLocal);
   }
 
   FD.P_1024 = '80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001981bf';
@@ -105,9 +77,10 @@ $('document').ready(function () {
 
     data.brief = $('#input-brief').is(':checked');
 
-    data.defaultBase = $('#input-base-default').val().length > 0 ? $('#input-base-default').val() : undefined;
-    data.defaultExponent = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
-    data.defaultModulus = $('#input-modulus-default').val().length > 0 ? $('#input-modulus-default').val() : undefined;
+    data.defaults = {};
+    data.defaults.b = $('#input-base-default').val().length > 0 ? $('#input-base-default').val() : undefined;
+    data.defaults.e = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
+    data.defaults.m = $('#input-modulus-default').val().length > 0 ? $('#input-modulus-default').val() : undefined;
 
     var bases = FD.stringToList($('#input-bases').val());
     var exponents = FD.stringToList($('#input-exponents').val());
@@ -117,9 +90,11 @@ $('document').ready(function () {
     count = count === 0 ? 1 : count;
     data.modexps = [count];
     for (var i = 0; i < count; i++) {
-      data.modexps[i] = [bases[i] === '' ? undefined : bases[i],
-        exponents[i] === '' ? undefined : exponents[i],
-        moduli[i] === '' ? undefined : moduli[i]];
+      data.modexps[i] = {
+        b: bases[i] === '' ? undefined : bases[i],
+        e: exponents[i] === '' ? undefined : exponents[i],
+        m: moduli[i] === '' ? undefined : moduli[i]
+      };
     }
     return data;
   };
@@ -290,26 +265,10 @@ $('document').ready(function () {
   };
 
   FD.modexpLocal = function (data) {
-    var modexp = [data.modexps[0][0] || data.defaultBase, data.modexps[0][1] || data.defaultExponent, data.modexps[0][2] || data.defaultModulus];
-    // ======= START local performance measurement =======
     FD.timeLocal = performance.now();
-    FD.resultLocal = FD.modexp(modexp[0], modexp[1], modexp[2]);
+    var modexps = data.modexps.map(modexp => ({b: modexp.b || data.defaults.b, e: modexp.e || data.defaults.e, m: modexp.m || data.defaults.m}));
+    var results = modexps.map(modexp => FD.modexp(modexp));
     FD.timeLocal = performance.now() - FD.timeLocal;
-    // ======= END local performance measurement =======
-
-    FD.resultLocal = FD.resultLocal !== '0' && FD.resultLocal.startsWith('0') ? FD.resultLocal.substring(1) : FD.resultLocal;
-    FD.showLocalTime(FD.timeLocal);
-    FD.showLocalResult(FD.resultLocal, 1);
-  };
-
-  FD.modexpsLocal = function (data) {
-    var modexps = data.modexps.map(modexp => [modexp[0] || data.defaultBase, modexp[1] || data.defaultExponent, modexp[2] || data.defaultModulus]);
-
-    // ======= START local performance measurement =======
-    FD.timeLocal = performance.now();
-    var results = modexps.map(modexp => FD.modexp(modexp[0], modexp[1], modexp[2]));
-    FD.timeLocal = performance.now() - FD.timeLocal;
-    // ======= END local performance measurement =======
 
     // some formatting to have local results in the same format as remote ones
     results.forEach(result => {
@@ -322,44 +281,45 @@ $('document').ready(function () {
   };
 
   FD.modexpRemote = function (data) {
-    var modexp = [data.modexps[0][0] || data.defaultBase, data.modexps[0][1] || data.defaultExponent, data.modexps[0][2] || data.defaultModulus];
-    var fam = new FamodulusClient(data.servers, data.brief);
+    var fam = new FamodulusClient(data.servers, false, data.brief);
 
     (function () {
       if (FD.algorithm === 'direct') {
         FD.timeRemote = performance.now();
-        return fam.direct(modexp[0], modexp[1], modexp[2]);
+        return fam.direct(data.modexps, data.defaults);
       } else if (FD.algorithm === 'dec2') {
         FD.timeRemote = performance.now();
-        return fam.decExponent(modexp[0], modexp[1], modexp[2], false);
+        return fam.decExponent(data.modexps, data.defaults, false);
       } else if (FD.algorithm === 'dec2-checked') {
         FD.timeRemote = performance.now();
-        return fam.decExponent(modexp[0], modexp[1], modexp[2], true);
+        return fam.decExponent(data.modexps, data.defaults, true);
       }
-    })().then(result => {
-      _remoteDone(result);
-    }).catch(ex => {
-      alert('An error occured: ' + ex);
-      console.log(ex);
-    });
-  };
+    })().then(results => {
+      FD.timeRemote = performance.now() - FD.timeRemote;
 
-  FD.modexpsRemote = function (data) {
-    var fam = new FamodulusClient(data.servers, data.brief);
-
-    (function () {
-      if (FD.algorithm === 'direct') {
-        FD.timeRemote = performance.now();
-        return fam.directs(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus);
-      } else if (FD.algorithm === 'dec2') {
-        FD.timeRemote = performance.now();
-        return fam.decExponents(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, false);
-      } else if (FD.algorithm === 'dec2-checked') {
-        FD.timeRemote = performance.now();
-        return fam.decExponents(data.modexps, data.defaultBase, data.defaultExponent, data.defaultModulus, true);
+      if (FD.timeRemote < FD.timeLocal) {
+        FD.showRemoteTime(FD.timeRemote, true);
+        FD.showLocalTime(FD.timeLocal, false);
+      } else if (FD.timeRemote > FD.timeLocal) {
+        FD.showRemoteTime(FD.timeRemote, false);
+        FD.showLocalTime(FD.timeLocal, true);
+      } else {
+        FD.showRemoteTime(FD.timeRemote);
       }
-    })().then(result => {
-      _remoteDone(result);
+
+      if (results.r) {
+        FD.resultRemote = results.r;
+        FD.showRemoteResult(FD.resultRemote, 1);
+      } else {
+        for (var i = 0; i < results.length - 1; i++) {
+          FD.resultRemote += results[i].r + ',\n';
+        }
+        FD.resultRemote += results[results.length - 1].r;
+        FD.showRemoteResult(FD.resultRemote, results.length);
+      }
+
+      FD.showDifference(FD.timeRemote, FD.timeLocal);
+      FD.showEqual(FD.resultRemote, FD.resultLocal);
     }).catch(ex => {
       alert('An error occured: ' + ex);
       console.log(ex);
