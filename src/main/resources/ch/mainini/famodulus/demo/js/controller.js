@@ -27,7 +27,7 @@ $('document').ready(function () {
     times = times.length > 0 ? times : 1;
     bits = bits.length > 0 ? bits : 2040;
 
-    for (var i = 0; i < times; i++) {
+    for (let i = 0; i < times; i++) {
       FD.appendTo('#input-bases', FD.randString(bits));
       FD.appendTo('#input-exponents', FD.randString(bits));
       FD.appendTo('#input-moduli', modulus);
@@ -88,7 +88,7 @@ $('document').ready(function () {
   });
 
   $('#btn-calculate').click(function () {
-    var data = prepareCalculation();
+    let data = prepareCalculation();
     if (data) {
       FD.modexpLocal(data);
       FD.modexpRemote(data);
@@ -96,12 +96,12 @@ $('document').ready(function () {
   });
 
   $('#btn-calculate-local').click(function () {
-    var data = prepareCalculation();
+    let data = prepareCalculation();
     if (data) FD.modexpLocal(data);
   });
 
   $('#btn-calculate-remote').click(function () {
-    var data = prepareCalculation();
+    let data = prepareCalculation();
     if (data) FD.modexpRemote(data);
   });
 

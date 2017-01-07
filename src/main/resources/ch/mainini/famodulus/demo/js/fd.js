@@ -3,21 +3,21 @@
 $('document').ready(function () {
   'use strict';
 
-  var FD = {};
+  const FD = {};
   window.FD = FD;
 
   function _modexpLeemon (modexp) {
-    var b = str2bigInt(modexp.b, 16, 0);
-    var e = str2bigInt(modexp.e, 16, 0);
-    var m = str2bigInt(modexp.m, 16, 0);
+    let b = str2bigInt(modexp.b, 16, 0);
+    let e = str2bigInt(modexp.e, 16, 0);
+    let m = str2bigInt(modexp.m, 16, 0);
 
     return bigInt2str(powMod(b, e, m), 16);
   }
 
   function _modexpVerificatum (modexp) {
-    var b = new verificatum.arithm.LargeInteger(modexp.b);
-    var e = new verificatum.arithm.LargeInteger(modexp.e);
-    var m = new verificatum.arithm.LargeInteger(modexp.m);
+    let b = new verificatum.arithm.LargeInteger(modexp.b);
+    let e = new verificatum.arithm.LargeInteger(modexp.e);
+    let m = new verificatum.arithm.LargeInteger(modexp.m);
 
     return b.modPow(e, m).toHexString(16);
   }
@@ -37,7 +37,7 @@ $('document').ready(function () {
   FD.modexp = _modexpLeemon;
 
   FD.loadVerificatum = function () {
-    var script = document.createElement('script');
+    let script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
     $('body').append(script);
@@ -46,8 +46,8 @@ $('document').ready(function () {
   };
 
   FD.randString = function (bitLength) {    // @todo CSPRNG?
-    var numNibbles = 2 * Math.floor(bitLength / 8) === 0 ? 1 : 2 * Math.floor(bitLength / 8);
-    var retval = '';
+    let numNibbles = 2 * Math.floor(bitLength / 8) === 0 ? 1 : 2 * Math.floor(bitLength / 8);
+    let retval = '';
     while (retval.length < numNibbles) {
       retval += Math.floor(Math.random() * 16).toString(16);
     }
@@ -55,7 +55,7 @@ $('document').ready(function () {
   };
 
   FD.appendTo = function (field, value) {
-    var curval = $(field).val().toString();
+    let curval = $(field).val().toString();
     if (curval.length === 0) $(field).val(value);
     else if (curval.endsWith(',')) $(field).val(curval + '\n' + value);
     else if (curval.endsWith(',\n')) $(field).val(curval + value);
@@ -69,7 +69,7 @@ $('document').ready(function () {
   };
 
   FD.parseFields = function () {
-    var data = {};
+    let data = {};
 
     if (FD.algorithm === 'direct') data.servers = [FD.getServer('#input-server-1-1')];
     else if (FD.algorithm === 'dec2') data.servers = [FD.getServer('#input-server-2-1'), FD.getServer('#input-server-2-2')];
@@ -82,14 +82,14 @@ $('document').ready(function () {
     data.defaults.e = $('#input-exponent-default').val().length > 0 ? $('#input-exponent-default').val() : undefined;
     data.defaults.m = $('#input-modulus-default').val().length > 0 ? $('#input-modulus-default').val() : undefined;
 
-    var bases = FD.stringToList($('#input-bases').val());
-    var exponents = FD.stringToList($('#input-exponents').val());
-    var moduli = FD.stringToList($('#input-moduli').val());
+    let bases = FD.stringToList($('#input-bases').val());
+    let exponents = FD.stringToList($('#input-exponents').val());
+    let moduli = FD.stringToList($('#input-moduli').val());
 
-    var count = Math.max(Math.max(bases.length, exponents.length), moduli.length);
+    let count = Math.max(Math.max(bases.length, exponents.length), moduli.length);
     count = count === 0 ? 1 : count;
     data.modexps = [count];
-    for (var i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       data.modexps[i] = {
         b: bases[i] === '' ? undefined : bases[i],
         e: exponents[i] === '' ? undefined : exponents[i],
@@ -108,7 +108,7 @@ $('document').ready(function () {
   };
 
   FD.createGlyph = function (glyph) {
-    var s = document.createElement('span');
+    let s = document.createElement('span');
     s.setAttribute('aria-hidden', true);
 
     switch (glyph) {
@@ -171,7 +171,7 @@ $('document').ready(function () {
 
   FD.showRemoteResult = function (result, count) {
     $('#h-results-remote').remove();
-    var h = document.createElement('h4');
+    let h = document.createElement('h4');
     h.id = 'h-results-remote';
     h.appendChild(document.createTextNode('Remote Results (' + count + '):'));
     $('#div-results-remote-title').append(h);
@@ -182,7 +182,7 @@ $('document').ready(function () {
 
   FD.showLocalResult = function (result, count) {
     $('#h-results-local').remove();
-    var h = document.createElement('h4');
+    let h = document.createElement('h4');
     h.id = 'h-results-local';
     h.appendChild(document.createTextNode('Local Results (' + count + '):'));
     $('#div-results-local-title').append(h);
@@ -193,7 +193,7 @@ $('document').ready(function () {
 
   FD.showRemoteTime = function (time, better) {
     $('#p-time-remote').remove();
-    var p = document.createElement('p');
+    let p = document.createElement('p');
     p.id = 'p-time-remote';
 
     if (better === undefined) {
@@ -213,7 +213,7 @@ $('document').ready(function () {
 
   FD.showLocalTime = function (time, better) {
     $('#p-time-local').remove();
-    var p = document.createElement('p');
+    let p = document.createElement('p');
     p.id = 'p-time-local';
 
     if (better === undefined) {
@@ -232,10 +232,10 @@ $('document').ready(function () {
   };
 
   FD.showDifference = function (time1, time2) {
-    var factor = time1 >= time2 ? Math.ceil(time1 / time2 * 100) / 100 : Math.ceil(time2 / time1 * 100) / 100;
+    let factor = time1 >= time2 ? Math.ceil(time1 / time2 * 100) / 100 : Math.ceil(time2 / time1 * 100) / 100;
 
     $('#p-time-difference').remove();
-    var p = document.createElement('p');
+    let p = document.createElement('p');
     p.id = 'p-time-difference';
     p.appendChild(FD.createGlyph('time'));
     p.appendChild(document.createTextNode('\xa0Difference: ' + Math.abs(time1 - time2) + ' ms (' + factor + ' times).'));
@@ -245,7 +245,7 @@ $('document').ready(function () {
 
   FD.showEqual = function (result1, result2) {
     $('#p-equal').remove();
-    var p = document.createElement('p');
+    let p = document.createElement('p');
     p.id = 'p-equal';
 
     if ((result1 === undefined && result2 !== undefined) ||
@@ -265,7 +265,7 @@ $('document').ready(function () {
   };
 
   FD.modexpLocal = function (data) {
-    var results;
+    let results;
     FD.timeLocal = performance.now();
     if (data.defaults.b || data.defaults.e || data.defaults.m) {
       results = (data.modexps.map(modexp =>
@@ -294,7 +294,7 @@ $('document').ready(function () {
   };
 
   FD.modexpRemote = function (data) {
-    var fam = new FamodulusClient(data.servers, false, data.brief);
+    let fam = new FamodulusClient(data.servers, false, data.brief);
 
     (function () {
       if (FD.algorithm === 'direct') {
@@ -324,7 +324,7 @@ $('document').ready(function () {
         FD.resultRemote = results.r;
         FD.showRemoteResult(FD.resultRemote, 1);
       } else {
-        for (var i = 0; i < results.length - 1; i++) {
+        for (let i = 0; i < results.length - 1; i++) {
           FD.resultRemote += results[i].r + ',\n';
         }
         FD.resultRemote += results[results.length - 1].r;
