@@ -41,18 +41,23 @@ $('document').ready(function () {
   };
 
   /**
-   * Generates a (pseudo) random number string of given bitlength in hex.
+   * Generates a random number string of given bitlength in hex using crypto.getRandomValues().
    *
    * @param {type} bitLength    Length of the string to generate
    * @returns {String}          The generated string
    */
-  FD.randString = function (bitLength) {    // @todo CSPRNG?
-    let numNibbles = 2 * Math.floor(bitLength / 8) === 0 ? 1 : 2 * Math.floor(bitLength / 8);
-    let retval = '';
-    while (retval.length < numNibbles) {
-      retval += Math.floor(Math.random() * 16).toString(16);
+  FD.randString = function (bitLength) {
+    var randbytes = new Uint8Array(Math.floor(bitLength / 8) === 0 ? 1 : Math.floor(bitLength / 8));
+    window.crypto.getRandomValues(randbytes);
+
+    let randhex = new Array(randbytes.length);
+
+    for (let i = 0; i < randbytes.length; i++) {
+      let bhex = randbytes[i].toString(16);
+      randhex[i] = randbytes[i] < 0x10 ? '0' + bhex : bhex;
     }
-    return retval;
+
+    return randhex.join('');
   };
 
   /**
