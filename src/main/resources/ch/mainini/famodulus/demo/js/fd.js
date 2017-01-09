@@ -3,6 +3,8 @@
 $('document').ready(function () {
   'use strict';
 
+  const VERIFICATUM_URI = 'http://www.verificatum.com/files/vjsc-1.1.0.js';
+
   // Namespace for all functionality
   const FD = {};
   window.FD = FD;
@@ -30,12 +32,12 @@ $('document').ready(function () {
    * Injects the Verificatum library into DOM by loading it from its homepage.
    */
   FD.loadVerificatum = function () {
-    let script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'http://www.verificatum.com/files/vjsc-1.1.0.js'; // @todo errorhandling!
-    $('body').append(script);
-    FD.modexp = _modexpVerificatum;
-    $('#btn-verificatum').prop('disabled', true);
+    $.getScript(VERIFICATUM_URI).done(() => {
+      FD.modexp = _modexpVerificatum;
+      $('#btn-verificatum').prop('disabled', true);
+    }).fail(() => {
+      alert('Failed to inject Verificatum, could not load: ' + VERIFICATUM_URI);
+    });
   };
 
   /**
