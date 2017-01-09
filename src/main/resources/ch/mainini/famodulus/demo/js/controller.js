@@ -3,15 +3,21 @@
 $('document').ready(function () {
   'use strict';
 
+  /**
+   * Function to be called from developer console, adds additional buttons for
+   * local and remote only calculation.
+   */
   window.debug = function () {
     $('#btn-calculate-local').show();
     $('#btn-calculate-remote').show();
   };
 
+  /**
+   * Resets the whole application (form fields and data).
+   */
   function reset () {
     FD.resetResults();
 
-    // bring back form to initial state
     $('#form-modexp').trigger('reset');
     $('#input-server-1-1').attr('placeholder', FD.DEFAULT_SERVER);
     $('#input-server-2-1').attr('placeholder', FD.DEFAULT_SERVER);
@@ -23,6 +29,13 @@ $('document').ready(function () {
     else $('#btn-verificatum').prop('disabled', false);
   }
 
+  /**
+   * Adds <times> random modexps with <bits> size and given modulus to the input fields.
+   *
+   * @param {Number} times      Number of modexps to add
+   * @param {Number} bits       Size in bits of modexps to add
+   * @param {String} modulus    Modulus to be used
+   */
   function addRandomModexps (times, bits, modulus) {
     times = times.length > 0 ? times : 1;
     bits = bits.length > 0 ? bits : 2040;
@@ -34,6 +47,9 @@ $('document').ready(function () {
     }
   }
 
+  /**
+   * Checks if parameters for calculation are complete, sets algorithm and resets results.
+   */
   function prepareCalculation () {
     if ($('#input-bases').val().length === 0 && $('#input-base-default').val().length === 0) alert('No base and no default base specified!');
     else if ($('#input-exponents').val().length === 0 && $('#input-exponent-default').val().length === 0) alert('No exponent and no default exponent specified!');
@@ -46,7 +62,7 @@ $('document').ready(function () {
     }
   }
 
-  $('#select-method').change(function () {
+  $('#select-method').change(() => {
     switch ($('#select-method').val()) {
       case 'direct':
         $('#div-two-servers').hide();
@@ -63,31 +79,31 @@ $('document').ready(function () {
     }
   });
 
-  $('#btn-default-p1024').click(function () {
+  $('#btn-default-p1024').click(() => {
     $('#input-modulus-default').val(FD.P_1024);
   });
 
-  $('#btn-default-p2048').click(function () {
+  $('#btn-default-p2048').click(() => {
     $('#input-modulus-default').val(FD.P_2048);
   });
 
-  $('#btn-default-p3072').click(function () {
+  $('#btn-default-p3072').click(() => {
     $('#input-modulus-default').val(FD.P_3072);
   });
 
-  $('#btn-add-p1024').click(function () {
+  $('#btn-add-p1024').click(() => {
     addRandomModexps($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_1024);
   });
 
-  $('#btn-add-p2048').click(function () {
+  $('#btn-add-p2048').click(() => {
     addRandomModexps($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_2048);
   });
 
-  $('#btn-add-p3072').click(function () {
+  $('#btn-add-p3072').click(() => {
     addRandomModexps($('#input-rand-times').val(), $('#input-rand-bits').val(), FD.P_3072);
   });
 
-  $('#btn-calculate').click(function () {
+  $('#btn-calculate').click(() => {
     let data = prepareCalculation();
     if (data) {
       FD.modexpLocal(data);
@@ -95,21 +111,21 @@ $('document').ready(function () {
     }
   });
 
-  $('#btn-calculate-local').click(function () {
+  $('#btn-calculate-local').click(() => {
     let data = prepareCalculation();
     if (data) FD.modexpLocal(data);
   });
 
-  $('#btn-calculate-remote').click(function () {
+  $('#btn-calculate-remote').click(() => {
     let data = prepareCalculation();
     if (data) FD.modexpRemote(data);
   });
 
-  $('#btn-reset').click(function () {
+  $('#btn-reset').click(() => {
     reset();
   });
 
-  $('#btn-verificatum').click(function () {
+  $('#btn-verificatum').click(() => {
     FD.loadVerificatum();
   });
 
