@@ -5,7 +5,7 @@
 
     <groupId>ch.mainini</groupId>
     <artifactId>famodulus-demo</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 
     <name>famodulus-demo</name>
     <description>Demonstration for outsourcing calculations using famodulus-client.</description>
