@@ -50,3 +50,11 @@ compilation to your webserver.
 The same result can also be achieved without using maven or if access without any webserver is desired. For this case, however,
 contents from `../famodulus-client/.build` have to be manually copied to `src/main/resources/ch/mainini/famodulus/demo`
 which can then be directly accessed or used further.
+
+# Version History
+
+## 1.0.0 (2017-01-11)
+
+* Initial version
+* Support for outsourcing modular exponentiation directly and with basic decomposition of exponent
+* Configurable base URI
