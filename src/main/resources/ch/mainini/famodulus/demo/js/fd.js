@@ -427,8 +427,12 @@ $('document').ready(function () {
    * @param {Object} data       Form data, including defaults, used for calculation
    */
   FD.modexpRemote = function (data) {
-    let fam = new FamodulusClient(data.servers, false, data.brief);
+    if (typeof FamodulusClient === 'undefined') {
+      alert('FamodulusClient library not found!');
+      return;
+    }
 
+    let fam = new FamodulusClient(data.servers, false, data.brief);
     (function () {
       if (FD.algorithm === 'direct') {
         FD.timeRemote = performance.now();
