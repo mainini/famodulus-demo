@@ -99,7 +99,7 @@ $('document').ready(function () {
   /**
    * Setter for the algorithm.
    *
-   * @param {type} algorithm    The algorithm to set
+   * @param {String} algorithm    The algorithm to set
    */
   FD.setAlgorithm = function (algorithm) {
     FD.algorithm = algorithm;
@@ -108,7 +108,7 @@ $('document').ready(function () {
   /**
    * Creates a <span> element with a specified glyph icon.
    *
-   * @param {type} glyph        Icon to use
+   * @param {String} glyph        Icon to use
    * @returns {Element}         The created <span> element
    */
   FD.createGlyph = function (glyph) {
@@ -273,6 +273,7 @@ $('document').ready(function () {
 
   /**
    * Display the difference between two given times
+   *
    * @param {Number} time1      First time for comparison
    * @param {Number} time2      Second time for comparison
    */
