@@ -34,14 +34,16 @@
                 <h3 style="margin-bottom:0px">Outsourcing Demo</h3>
             </div>
 
-            <p>On this page, outsourcing of a single or multiple modexps can be tried out and performance can be compared to calculations performed in the browser.
+            <p>On this page, outsourcing of a single or multiple modexps can be evaluated and the performance can be compared to calculations performed locally in the browser.
                 After choosing the outsourcing method, enter the parameters for the modexp(s) separated by comma. When calculating multiple modexps, default
-                parameters can be set which apply in case they are missing for a modexp.</p>
+                parameters can be set which are applied in case they are missing for any modexp.</p>
 
             <p>Direct outsourcing requires a single server and simply sends base, exponent and modulus as is to the server without any blinding.</p>
 
-            <p>Outsourcing with basic decomposition (DEC) algebraically blinds either base or exponent or both, requiring two or four servers depending
-                on the blinding.</p>
+            <p>Outsourcing with basic decomposition (DEC) algebraically blinds the exponent, requiring two servers. For testing purposes, the same server
+                can be used, clearly however, the exponent can then be determined server side. The checked version of the algorithm sends an additional test modexp
+                to be able to detect errors or malicious behaviour on one server with a probability of 1/2.
+            </p>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -63,7 +65,7 @@
                                 </div>
                                 <label class="control-label col-xs-2" for="input-brief">Brief Response</label>
                                 <div class="col-xs-1">
-                                    <input id="input-brief" class="form-control input-sm" type="checkbox" checked>
+                                    <input id="input-brief" class="form-control input-sm" type="checkbox" title="Shall the response of the server also contain the original modexp data?" checked>
                                 </div>
                             </div>
 
@@ -132,21 +134,21 @@
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-bases">Bases</label>
                                 <div class="col-xs-10">
-                                    <textarea id="input-bases" class="form-control input-sm" rows="5"></textarea>
+                                    <textarea id="input-bases" class="form-control input-sm" rows="5" placeholder="Enter base(s), separated with comma."></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-exponents">Exponents</label>
                                 <div class="col-xs-10">
-                                    <textarea id="input-exponents" class="form-control input-sm" rows="5"></textarea>
+                                    <textarea id="input-exponents" class="form-control input-sm" rows="5" placeholder="Enter exponent(s), separated with comma."></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="control-label col-xs-2" for="input-moduli">Moduli</label>
                                 <div class="col-xs-10">
-                                    <textarea id="input-moduli" class="form-control input-sm" rows="5"></textarea>
+                                    <textarea id="input-moduli" class="form-control input-sm" rows="5" placeholder="Enter moduli, separated with comma."></textarea>
                                 </div>
                             </div>
 
@@ -228,7 +230,7 @@
         <footer>
             <hr style="width:50%;margin-bottom:0px">
             <p style="text-align:center;margin:0px"><small>famodulus - Outsourcing calculations in multiplicative groups with prime modulus</small></p>
-            <p style="text-align:center;margin:0px"><small>© 2016/2017 <a href="http://mainini.ch">Pascal Mainini</a>, all rights reserved.</small></p>
+            <p style="text-align:center;margin:0px"><small>© 2016/2017 <a href="http://mainini.ch" target="_blank">Pascal Mainini</a>, all rights reserved.</small></p>
         </footer>
 
         <script src="js/jquery.min.js"></script>
