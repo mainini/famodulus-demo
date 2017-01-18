@@ -53,6 +53,11 @@ which can then be directly accessed or used further.
 
 # Version History
 
+## 1.0.1 (2017-01-18)
+
+* Wording change: method -> protocol
+* Minor fixed in docstrings
+
 ## 1.0.0 (2017-01-11)
 
 * Initial version
