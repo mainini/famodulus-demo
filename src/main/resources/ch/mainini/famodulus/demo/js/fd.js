@@ -43,7 +43,7 @@ $('document').ready(function () {
   /**
    * Generates a random number string of given bitlength in hex using crypto.getRandomValues().
    *
-   * @param {type} bitLength    Length of the string to generate
+   * @param {Number} bitLength    Length of the string to generate
    * @returns {String}          The generated string
    */
   FD.randString = function (bitLength) {
@@ -63,8 +63,8 @@ $('document').ready(function () {
   /**
    * Tries to safely append a value to a given field, delimiting it with ",\n".
    *
-   * @param {type} field        The field to append to
-   * @param {type} value        The value to append
+   * @param {String} field        The field to append to
+   * @param {String} value        The value to append
    */
   FD.appendTo = function (field, value) {
     let curval = $(field).val().toString();
@@ -108,7 +108,7 @@ $('document').ready(function () {
   /**
    * Creates a <span> element with a specified glyph icon.
    *
-   * @param {String} glyph        Icon to use
+   * @param {String} glyph      Icon to use
    * @returns {Element}         The created <span> element
    */
   FD.createGlyph = function (glyph) {
